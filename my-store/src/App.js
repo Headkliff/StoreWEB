@@ -1,5 +1,6 @@
-import React, {Component} from 'react';
-import Users from './components/users';
+import React, { Component } from 'react';
+import './App.css'
+
 
 class App extends Component {
   state = {
@@ -9,36 +10,30 @@ class App extends Component {
 
   componentDidMount() {
     fetch('https://localhost:44326/api/user/')
-    .then(res => res.json())
-    .then(json=>{
-      this.setState({
-        isLoaded:true,
-        items: json,
-      })
-    });
+      .then(res => res.json())
+      .then(json => {
+        this.setState({
+          isLoaded: true,
+          items: json,
+        })
+      });
   }
+  render() {
+    return (
+      <div className='App'>
+        <div className='.App__Aside'></div>
+        <div className='App__Form'>
+          <div className='PageSwitcher'>
+            <a href='#' className='PageSwitcher__Item'>Sign In</a>
+            <a href='#' className='PageSwitcher__Item PageSwitcher__Item--Active'>Sign Up</a>
+          </div>
 
-  render () {
-
-    var{isLoaded,items} = this.state;
-
-    if (!isLoaded){
-      return <div>Loading...</div>;
-    }
-    else{
-      return (
-        <div className = 'App'>
-          <ul>
-            {items.map(item=>(
-              <li key={item.nickname}>
-                Nickname: {item.nickname} | FirstName: {item.firstName}
-              </li>
-            ))}
-          </ul>
+          <div className='FormTitle'>
+            <a href='#' className='FormTitle__Link'>Sign In</a> or <a href='#' className='FormTitle__Link FormTitle__Link--Active'>Sign Up</a>
+          </div>
         </div>
-      );
-    }
+      </div>
+    );
   }
 }
-
 export default App;
