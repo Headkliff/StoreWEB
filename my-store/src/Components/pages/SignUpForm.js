@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import axios from 'axios';
 
 class SignUpForm extends Component {
@@ -9,6 +9,7 @@ class SignUpForm extends Component {
 
         this.state = {
             nickname: '',
+            email:'',
             password: '',
             firstName: '',
             secondName:''
@@ -53,26 +54,31 @@ class SignUpForm extends Component {
                 <form className='FormFields' onSubmit={this.handleSubmit}>
                     <div className='FormField'>
                         <label className='FormField__Label' htmlFor='nickname'>Nickname</label>
-                        <input type='text' id='nickname' className='FormField__Input' placeholder='Enter your nickname' name='nickname' value={this.state.nickname} onChange={this.handleChange}/>
+                        <input type='text' id='nickname' required minLength='4' maxLength={16}className='FormField__Input' placeholder='Enter your nickname' name='nickname' value={this.state.nickname} onChange={this.handleChange}/>
+                    </div>
+
+                    <div className='FormField'>
+                        <label className='FormField__Label' htmlFor='nickname'>Email</label>
+                        <input type='email' id='email' required className='FormField__Input' placeholder='Enter your email' name='email' value={this.state.email} onChange={this.handleChange}/>
                     </div>
 
                     <div className='FormField'>
                         <label className='FormField__Label' htmlFor='password'>Password</label>
-                        <input type='password' id='password' className='FormField__Input' placeholder='Enter your password' name='password' value={this.state.password} onChange={this.handleChange} />
+                        <input type='password' id='password' required minLength='8' maxLength='16' className='FormField__Input' placeholder='Enter your password' name='password' value={this.state.password} onChange={this.handleChange} />
                     </div>
 
                     <div className='FormField'>
                         <label className='FormField__Label' htmlFor='firstName'>First Name</label>
-                        <input type='text' id='firstName' className='FormField__Input' placeholder='Enter your First Name' name='firstName' value={this.state.firstName} onChange={this.handleChange}/>
+                        <input type='text' id='firstName' maxLength='25' className='FormField__Input' placeholder='Enter your First Name' name='firstName' value={this.state.firstName} onChange={this.handleChange}/>
                     </div>
 
                     <div className='FormField'>
                         <label className='FormField__Label' htmlFor='secondName'>Second Name</label>
-                        <input type='text' id='secondName' className='FormField__Input' placeholder='Enter your Second Name' name='secondName' value={this.state.secondName} onChange={this.handleChange} />
+                        <input type='text' id='secondName' maxLength='25' className='FormField__Input' placeholder='Enter your Second Name' name='secondName' value={this.state.secondName} onChange={this.handleChange} />
                     </div>
 
                     <div className="FormField">
-                        <button className="FormField__Button mr-20">Sign Up</button> <Link to="/sign-in" className="FormField__Link">I'm already member</Link>
+                        <button className="FormField__Button mr-20">Sign Up</button> <NavLink to="/login" className="FormField__Link">I'm already member</NavLink>
                     </div>
                 </form>
             </div>

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import axios from 'axios'
-import { allResolved } from 'q';
+
 
 
 class SignInForm extends Component {
@@ -52,16 +52,16 @@ class SignInForm extends Component {
                 <form onSubmit={this.handleSubmit} className='FormFields' onSubmit={this.handleSubmit}>
                     <div className='FormField'>
                         <label className='FormField__Label' htmlFor='nickname'>Nickname</label>
-                        <input type='text' id='nickname' className='FormField__Input' placeholder='Enter your nickname' name='nickname' value = {this.state.nickname} onChange={this.handleChange}/>
+                        <input type='text' id='nickname' required maxLength='16' className='FormField__Input' placeholder='Enter your nickname' name='nickname' value = {this.state.nickname} onChange={this.handleChange}/>
                     </div>
 
                     <div className='FormField'>
                         <label className='FormField__Label' htmlFor='password'>Password</label>
-                        <input type='password' id='password' className='FormField__Input' placeholder='Enter your password' name='password' value ={this.state.password} onChange={this.handleChange}/>
+                        <input type='password' id='password' required maiLength='8' maxLength='16' className='FormField__Input' placeholder='Enter your password' name='password' value ={this.state.password} onChange={this.handleChange}/>
                     </div>
 
                     <div className="FormField">
-                        <button className="FormField__Button mr-20">Sign In</button> <Link to="/sign-up" className="FormField__Link">Create an account</Link>
+                        <button className="FormField__Button mr-20">Sign In</button> <NavLink to="/registration" className="FormField__Link">Create an account</NavLink>
                     </div>
                 </form>
             </div>
