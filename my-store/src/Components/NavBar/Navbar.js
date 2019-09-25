@@ -24,20 +24,20 @@ class Navibar extends React.Component {
                 </button>
 
                 <div className="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul className="navbar-nav mr-auto">
+                    <ol className="navbar-nav mr-auto">
                         <NavItem path="/" name="Home" />
-                        <NavItem path="/page2" name="Page2" />
+                        <NavItem path="/user" name="User" />
                         <NavItem path="/page3" name="Disabled" disabled="true" />
 
-                    </ul>
+                    </ol>
                 </div>
-                <div className='navbar-right'>
-                    <ul className="navbar-nav mr-auto">
+                <nav aria-label="breadcrumb">
+                    <ol className="breadcrumb">
                         <NavItem path="/login" name='Log In' />
                         <NavItem path="/registration" name='Rgistration' disabled="true"/>
-                    </ul>
+                    </ol>
 
-                </div>
+                </nav>
             </nav>
         )
     }
