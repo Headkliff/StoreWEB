@@ -38,12 +38,10 @@ class SignInForm extends Component {
       .post("https://localhost:44326/api/Login", user)
       .then(res => {
         localStorage.setItem("token", res.data);
-        console.log(res.data);
+        this.props.history.push('/')
       })
       .catch(function(error) {
-        if (error === 401) {
-          alert("You are not exist");
-        }
+          alert("Invalid entries");
       });
   }
 

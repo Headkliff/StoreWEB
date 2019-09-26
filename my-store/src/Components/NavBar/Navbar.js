@@ -1,5 +1,6 @@
 import React from 'react';
 
+
 class Navibar extends React.Component {
     render() {
         const NavItem = props => {
@@ -34,9 +35,8 @@ class Navibar extends React.Component {
                 <nav aria-label="breadcrumb">
                     <ol className="breadcrumb">
                         <NavItem path="/login" name='Log In' />
-                        <NavItem path="/registration" name='Rgistration' disabled="true"/>
+                        <NavItem path="/registration" name='Rgistration' disabled="true"/>       
                     </ol>
-
                 </nav>
             </nav>
         )

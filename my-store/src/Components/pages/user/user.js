@@ -4,12 +4,13 @@ import axios from "axios";
 class User extends React.Component {
   constructor() {
     super();
-
+    this.getUserInfo();
     this.state = {
       nickname: "",
       email: "",
       firstName: "",
-      secondName: ""
+      secondName: "",
+      authorize: false
     };
   }
 
@@ -22,30 +23,36 @@ class User extends React.Component {
       [name]: value
     });
   };
-   
-  getUserInfo(){
+
+  getUserInfo() {
     axios
-    .get("https://localhost:44326/api/user", {
-      headers: { Authorization: "Bearer " + localStorage.getItem("token") }
-    })
-    .then(res => {
-      
-      console.log(res);
-    })
-    .catch(function(error) {
-      
-    })
+      .get("https://localhost:44326/api/user", {
+        headers: { Authorization: "Bearer " + localStorage.getItem("token") }
+      })
+      .then(res => {
+        this.setState({
+          authorize: true,
+          nickname: res.data.nickname,
+          email: res.data.email,
+          firstName: res.data.firstName,
+          secondName: res.data.secondName
+        });
+      })
+      .catch(function(error) {
+        if (error.value === 401) {
+          this.setState({ authorize: false });
+        }
+      });
   }
 
   render() {
-    return (
-      <div>
-          {this.getUserInfo()}
+    var info;
+    if (this.state.authorize) {
+      info = (
         <div className="container">
           <div className="panel panel-default">
             <div className="panel-heading">
               <h4 align="center">User Profile</h4>
-              <button type="submit" className="btn btn-primary">Load Data</button>
             </div>
 
             <div className="panel-body">
@@ -73,8 +80,23 @@ class User extends React.Component {
             </div>
           </div>
         </div>
-      </div>
-    );
+      );
+    } else {
+      info = (
+        <div className="alert alert-danger" role="alert">
+          <span>You are not authorized </span>
+          <a href="login" className="alert-link">
+            Login
+          </a>
+          <span> or </span>
+          <a href="/register" className="alert-link">
+            Register
+          </a>
+        </div>
+      );
+    }
+
+    return <div>{info}</div>;
   }
 }
 

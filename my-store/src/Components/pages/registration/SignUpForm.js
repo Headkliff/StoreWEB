@@ -14,6 +14,9 @@ class SignUpForm extends Component {
       firstName: "",
       secondName: ""
     };
+
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleChange(e) {
@@ -38,9 +41,15 @@ class SignUpForm extends Component {
     console.log("The form was submitted with the following data:");
     console.log(this.state);
 
-    axios.post("https://localhost:44326/api/register", user).then(res => {
-      localStorage.setItem("token", res.data);
-    });
+    axios
+      .post("https://localhost:44326/api/register", user)
+      .then(res => {
+        localStorage.setItem("token", res.data);
+        this.props.history.push("/");
+      })
+      .catch(function(error) {
+          alert("This user exist!");
+      });
   }
 
   render() {
@@ -48,11 +57,9 @@ class SignUpForm extends Component {
       <div className="container">
         <div className="jumbotron jumbotron-fluid">
           <form onSubmit={this.handleSubmit}>
-            <div class="form-row">
-              <div class="col-md-4 mb-3">
-                <label for="nickname" htmlFor="nickname">
-                  Nickname
-                </label>
+            <div className="form-row">
+              <div className="col-md-4 mb-3">
+                <label htmlFor="nickname">Nickname</label>
                 <input
                   type="text"
                   className="form-control"
@@ -63,12 +70,12 @@ class SignUpForm extends Component {
                   placeholder="Enter your nickname"
                   name="nickname"
                   value={this.state.nickname}
-                  onChange={e => this.handleChange(e)}
+                  onChange={this.handleChange}
                 />
               </div>
 
-              <div class="col-md-4 mb-3">
-                <label for="email" className="Label" htmlFor="Email">
+              <div className="col-md-4 mb-3">
+                <label className="Label" htmlFor="email">
                   Email
                 </label>
                 <input
@@ -79,14 +86,12 @@ class SignUpForm extends Component {
                   className="form-control"
                   placeholder="Enter your email"
                   value={this.state.email}
-                  onChange={e => this.handleChange(e)}
+                  onChange={this.handleChange}
                 />
               </div>
 
-              <div class="col-md-4 mb-3">
-                <label for="password" htmlFor="password">
-                  Password
-                </label>
+              <div className="col-md-4 mb-3">
+                <label htmlFor="password">Password</label>
                 <input
                   type="password"
                   id="password"
@@ -97,15 +102,13 @@ class SignUpForm extends Component {
                   placeholder="Enter your password"
                   name="password"
                   value={this.state.password}
-                  onChange={e => this.handleChange(e)}
+                  onChange={this.handleChange}
                 />
               </div>
             </div>
-            <div class="form-row">
-              <div class="col-md-6 mb-3">
-                <label for="firstName" htmlFor="firstName">
-                  First Name
-                </label>
+            <div className="form-row">
+              <div className="col-md-6 mb-3">
+                <label htmlFor="firstName">First Name</label>
                 <input
                   type="text"
                   id="firstName"
@@ -114,15 +117,13 @@ class SignUpForm extends Component {
                   placeholder="Enter your First Name"
                   name="firstName"
                   value={this.state.firstName}
-                  onChange={e => this.handleChange(e)}
+                  onChange={this.handleChange}
                   required
                 />
               </div>
 
-              <div class="col-md-6 mb-3">
-                <label for="secondName" htmlFor="secondName">
-                  Second Name
-                </label>
+              <div className="col-md-6 mb-3">
+                <label htmlFor="secondName">Second Name</label>
                 <input
                   type="text"
                   id="secondName"
@@ -131,7 +132,7 @@ class SignUpForm extends Component {
                   placeholder="Enter your Second Name"
                   name="secondName"
                   value={this.state.secondName}
-                  onChange={e => this.handleChange(e)}
+                  onChange={this.handleChange}
                   required
                 />
               </div>
