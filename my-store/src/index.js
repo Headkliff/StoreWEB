@@ -10,6 +10,7 @@ import SignUpForm from "./Components/pages/registration/SignUpForm"
 import Notfound from "./Components/pages/404/notfound"
 import Navibar from './Components/NavBar/Navbar';
 import User from '../src/Components/pages/user/user'
+import EditUser from "..//src/Components/pages/user/editinfo/editUser"
 
 const routing = (
 
@@ -20,8 +21,9 @@ const routing = (
           <Route path="/login" component={SignInForm} />
           <Route path="/registration" component={SignUpForm} />
           <Route path='/user' component = {User}/>
-          <Route component={Notfound} />
-        </Switch>
+          <Route path = "/edituser" component={EditUser}/>
+          <Route path='*'component={Notfound} />
+          </Switch>
     </Router>
   )
 

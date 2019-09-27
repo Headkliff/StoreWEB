@@ -28,14 +28,12 @@ class Navibar extends React.Component {
                     <ol className="navbar-nav mr-auto">
                         <NavItem path="/" name="Home" />
                         <NavItem path="/user" name="User" />
-                        <NavItem path="/page3" name="Disabled" disabled="true" />
-
                     </ol>
                 </div>
                 <nav aria-label="breadcrumb">
                     <ol className="breadcrumb">
                         <NavItem path="/login" name='Log In' />
-                        <NavItem path="/registration" name='Rgistration' disabled="true"/>       
+                        <NavItem path="/registration" name='Registration' disabled="true"/>       
                     </ol>
                 </nav>
             </nav>

@@ -1,5 +1,6 @@
 import React from "react";
 import axios from "axios";
+import {Link} from 'react-router-dom';
 
 class User extends React.Component {
   constructor() {
@@ -12,6 +13,8 @@ class User extends React.Component {
       secondName: "",
       authorize: false
     };
+
+    this.handleSubmit=this.handleSubmit.bind(this);
   }
 
   handleChange = e => {
@@ -22,6 +25,12 @@ class User extends React.Component {
     this.setState({
       [name]: value
     });
+  };
+
+  handleSubmit(e){
+    e.preventDefault();
+    this.props.history.push('/')
+    localStorage.clear()
   };
 
   getUserInfo() {
@@ -78,6 +87,12 @@ class User extends React.Component {
               <div className="clearfix"></div>
               <div className="bot-border"></div>
             </div>
+            <hr></hr>
+            <div className="clearfix"></div>
+            <button type="button" className='btn btn-link'>
+              <Link to="/edituser">Edit</Link>
+            </button>
+            <button type='submit' className='btn btn-dark' onClick = {this.handleSubmit}>Log Out</button>
           </div>
         </div>
       );
