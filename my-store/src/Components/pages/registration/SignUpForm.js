@@ -48,7 +48,7 @@ class SignUpForm extends Component {
         this.props.history.push("/");
       })
       .catch(function(error) {
-          alert("This user exist!");
+        alert("This user exist!");
       });
   }
 
@@ -139,12 +139,20 @@ class SignUpForm extends Component {
             </div>
 
             <div className="FormField">
-              <button type="submit" className="btn btn-primary">
-                Sign Up
-              </button>{" "}
-              <NavLink to="/login" className="Link">
-                I'm already member
-              </NavLink>
+              <div>
+                <ul className="nav justify-content-end">
+                  <li>
+                    <button type="submit" className="btn btn-primary">
+                      Sign Up
+                    </button>{" "}
+                  </li>
+                  <li>
+                    <NavLink to="/login" className="Link" align="right">
+                      I'm already member
+                    </NavLink>
+                  </li>
+                </ul>
+              </div>
             </div>
           </form>
         </div>

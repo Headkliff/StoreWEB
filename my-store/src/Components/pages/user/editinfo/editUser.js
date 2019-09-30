@@ -4,8 +4,6 @@ import axios from "axios";
 class EditUser extends React.Component {
   constructor(props) {
     super(props);
-    console.log("test");
-    this.getUserInfo();
     this.state = {
       nickname: "",
       email: "",
@@ -13,6 +11,7 @@ class EditUser extends React.Component {
       secondName: "",
       newPassword: ""
     };
+    this.getUserInfo();
   }
 
   handleChange = e => {
@@ -37,7 +36,7 @@ class EditUser extends React.Component {
     console.log("The form was submitted with the following data:");
     console.log(this.state);
 
-    axios.post("https://localhost:44326/api/user", user).then(res => {
+    axios.post("https://localhost:44326/api/user/edit", user).then(res => {
       localStorage.setItem("token", res.data);
       this.props.history.push("/user");
     });
@@ -70,27 +69,10 @@ class EditUser extends React.Component {
               <h4 align="center">User info editing</h4>
             </div>
             <form onSubmit={this.handleSubmit}>
-              <div>
-                <div className="form-group row">
+              <div align = 'center'>
+              <div className="form-group row">
                   <label
-                    htmlFor="inputEmail3"
-                    className="col-sm-2 col-form-label"
-                  >
-                    Nickname:
-                  </label>
-                  <div className="col-sm-10">
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="inputEmail3"
-                      placeholder={this.state.nickname}
-                    />
-                  </div>
-                </div>
-                
-                <div className="form-group row">
-                  <label
-                    htmlFor="inputEmail3"
+                    htmlFor="firstName"
                     className="col-sm-2 col-form-label"
                   >
                     First Name:
@@ -99,7 +81,7 @@ class EditUser extends React.Component {
                     <input
                       type="text"
                       className="form-control"
-                      id="inputEmail3"
+                      id="inputFirstName"
                       placeholder={this.state.firstName}
                     />
                   </div>
@@ -107,7 +89,7 @@ class EditUser extends React.Component {
                 
                 <div className="form-group row">
                   <label
-                    htmlFor="inputEmail3"
+                    htmlFor="inputSecondName"
                     className="col-sm-2 col-form-label"
                   >
                     Second Name:
@@ -116,7 +98,7 @@ class EditUser extends React.Component {
                     <input
                       type="text"
                       className="form-control"
-                      id="inputEmail3"
+                      id="inpotSecond"
                       placeholder={this.state.secondName}
                     />
                   </div>
@@ -124,7 +106,7 @@ class EditUser extends React.Component {
 
                 <div className="form-group row">
                   <label
-                    htmlFor="inputEmail3"
+                    htmlFor="Email"
                     className="col-sm-2 col-form-label"
                   >
                     Email:
@@ -133,7 +115,7 @@ class EditUser extends React.Component {
                     <input
                       type="email"
                       className="form-control"
-                      id="inputEmail3"
+                      id="inputEmail"
                       placeholder={this.state.email}
                     />
                   </div>
@@ -141,7 +123,7 @@ class EditUser extends React.Component {
 
                 <div className="form-group row">
                   <label
-                    htmlFor="inputEmail3"
+                    htmlFor="inputPassword"
                     className="col-sm-2 col-form-label"
                   >
                     New Password:
@@ -150,17 +132,19 @@ class EditUser extends React.Component {
                     <input
                       type="password"
                       className="form-control"
-                      id="inputEmail3"
+                      id="inputNewPass"
                       placeholder={this.state.newPassword}
                     />
                   </div>
                 </div>
-
               </div>
               <div className="FormField">
-                <button type="submit" className="btn btn-primary">
+                <div align = 'center'>
+                  <button type="submit" className="btn btn-primary">
                   Submit
                 </button>
+                </div>
+                
               </div>
             </form>
           </div>

@@ -1,20 +1,26 @@
 import React from "react";
 import axios from "axios";
-import {Link} from 'react-router-dom';
+import { Link } from "react-router-dom";
 
 class User extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.getUserInfo();
     this.state = {
       nickname: "",
       email: "",
       firstName: "",
       secondName: "",
-      authorize: false
-    };
+      authorized: this.authorized()
+    };   
+  }
 
-    this.handleSubmit=this.handleSubmit.bind(this);
+  authorized(){
+    if (localStorage.getItem("token") === null) {
+      this.setState({ authorized: false });
+    }else{
+      this.setState({ authorized: true });
+    }
   }
 
   handleChange = e => {
@@ -27,10 +33,10 @@ class User extends React.Component {
     });
   };
 
-  handleSubmit(e){
+  handleSubmit = e => {
     e.preventDefault();
-    this.props.history.push('/')
-    localStorage.clear()
+    this.props.history.push("/");
+    localStorage.clear();
   };
 
   getUserInfo() {
@@ -89,24 +95,34 @@ class User extends React.Component {
             </div>
             <hr></hr>
             <div className="clearfix"></div>
-            <button type="button" className='btn btn-link'>
+            <button type="button" className="btn btn-link">
               <Link to="/edituser">Edit</Link>
             </button>
-            <button type='submit' className='btn btn-dark' onClick = {this.handleSubmit}>Log Out</button>
+            <button
+              type="submit"
+              className="btn btn-dark"
+              onClick={this.handleSubmit}
+            >
+              Log Out
+            </button>
           </div>
         </div>
       );
     } else {
       info = (
-        <div className="alert alert-danger" role="alert">
-          <span>You are not authorized </span>
-          <a href="login" className="alert-link">
-            Login
-          </a>
-          <span> or </span>
-          <a href="/register" className="alert-link">
-            Register
-          </a>
+        <div className="jumbotron jumbotron">
+          <div className="container">
+            <div className="alert alert-danger" role="alert">
+              <span>You are not authorized </span>
+              <a href="login" className="alert-link">
+                Login
+              </a>
+              <span> or </span>
+              <a href="/register" className="alert-link">
+                Register
+              </a>
+            </div>
+          </div>
         </div>
       );
     }
