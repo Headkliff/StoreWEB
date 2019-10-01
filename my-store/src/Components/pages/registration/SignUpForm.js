@@ -66,7 +66,7 @@ class SignUpForm extends Component {
                   id="nickname"
                   required
                   minLength="4"
-                  maxLength={16}
+                  maxLength='16'
                   placeholder="Enter your nickname"
                   name="nickname"
                   value={this.state.nickname}

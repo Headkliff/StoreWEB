@@ -82,6 +82,8 @@ class EditUser extends React.Component {
                       type="text"
                       className="form-control"
                       id="inputFirstName"
+                      minLength="4"
+                      maxLength='25'
                       placeholder={this.state.firstName}
                     />
                   </div>
@@ -99,6 +101,8 @@ class EditUser extends React.Component {
                       type="text"
                       className="form-control"
                       id="inpotSecond"
+                      minLength="4"
+                      maxLength='25'
                       placeholder={this.state.secondName}
                     />
                   </div>
@@ -133,6 +137,8 @@ class EditUser extends React.Component {
                       type="password"
                       className="form-control"
                       id="inputNewPass"
+                      minLength="8"
+                      maxLength='16'
                       placeholder={this.state.newPassword}
                     />
                   </div>
