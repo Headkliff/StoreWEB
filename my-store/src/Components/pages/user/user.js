@@ -11,16 +11,9 @@ class User extends React.Component {
       email: "",
       firstName: "",
       secondName: "",
-      authorized: this.authorized()
-    };   
-  }
-
-  authorized(){
-    if (localStorage.getItem("token") === null) {
-      this.setState({ authorized: false });
-    }else{
-      this.setState({ authorized: true });
-    }
+      authorized: false,
+      loading: true
+    };
   }
 
   handleChange = e => {
@@ -31,12 +24,6 @@ class User extends React.Component {
     this.setState({
       [name]: value
     });
-  };
-
-  handleSubmit = e => {
-    e.preventDefault();
-    this.props.history.push("/");
-    localStorage.clear();
   };
 
   getUserInfo() {
@@ -50,84 +37,105 @@ class User extends React.Component {
           nickname: res.data.nickname,
           email: res.data.email,
           firstName: res.data.firstName,
-          secondName: res.data.secondName
+          secondName: res.data.secondName,
+          loading: false
         });
       })
-      .catch(function(error) {
-        if (error.value === 401) {
-          this.setState({ authorize: false });
-        }
+      .catch(error=> {
+          this.setState({ authorize: false, loading: false });
       });
   }
 
   render() {
     var info;
-    if (this.state.authorize) {
-      info = (
-        <div className="container">
-          <div className="panel panel-default">
-            <div className="panel-heading">
-              <h4 align="center">User Profile</h4>
+    if (this.state.loading)
+      return (
+        <div className="center">
+          <div className="container">
+            <div className="panel panel-default">
+              <div className="panel-heading">
+                <div className="loaded">User Details</div>
+              </div>
             </div>
-
             <div className="panel-body">
               <div className="box box-info">
-                <div className="col-sm-6">
-                  <span>
-                    <h4>{this.state.nickname}</h4>
-                  </span>
+                <div className="d-flex align-items-center">
+                  <strong>Loading...</strong>
+                  <div
+                    className="spinner-border ml-auto"
+                    role="status"
+                    aria-hidden="true"
+                  ></div>
                 </div>
-                <div className="clearfix"></div>
-                <hr></hr>
               </div>
-              <div className="col-sm-5 col-xs-6 tital ">First Name:</div>
-              <div className="col-sm-7 col-xs-6 ">{this.state.firstName}</div>
-              <div className="clearfix"></div>
-              <div className="bot-border"></div>
-              <div className="col-sm-5 col-xs-6 tital ">Last Name:</div>
-              <div className="col-sm-7"> {this.state.secondName}</div>
-              <div className="clearfix"></div>
-              <div className="bot-border"></div>
-              <div className="col-sm-5 col-xs-6 tital ">Email:</div>
-              <div className="col-sm-7">{this.state.email}</div>
-              <div className="clearfix"></div>
-              <div className="bot-border"></div>
-            </div>
-            <hr></hr>
-            <div className="clearfix"></div>
-            <button type="button" className="btn btn-link">
-              <Link to="/edituser">Edit</Link>
-            </button>
-            <button
-              type="submit"
-              className="btn btn-dark"
-              onClick={this.handleSubmit}
-            >
-              Log Out
-            </button>
-          </div>
-        </div>
-      );
-    } else {
-      info = (
-        <div className="jumbotron jumbotron">
-          <div className="container">
-            <div className="alert alert-danger" role="alert">
-              <span>You are not authorized </span>
-              <a href="login" className="alert-link">
-                Login
-              </a>
-              <span> or </span>
-              <a href="/register" className="alert-link">
-                Register
-              </a>
             </div>
           </div>
         </div>
       );
-    }
+    else {
+      if (this.state.authorize) {
+        info = (
+          <div className="center">
+            <div className="container">
+              <div className="panel panel-default">
+                <div className="panel-heading">
+                  <div className="loaded">User Details</div>
+                </div>
 
-    return <div>{info}</div>;
+                <div className="panel-body">
+                  <div className="box box-info">
+                    <div className="col-sm-6">
+                      <span>
+                        <h4>{this.state.nickname}</h4>
+                      </span>
+                    </div>
+                    <div className="clearfix"></div>
+                    <hr></hr>
+                  </div>
+                  <div className="col-sm-5 col-xs-6 tital ">First Name:</div>
+                  <div className="col-sm-7 col-xs-6 ">
+                    {this.state.firstName}
+                  </div>
+                  <div className="clearfix"></div>
+                  <div className="bot-border"></div>
+                  <div className="col-sm-5 col-xs-6 tital ">Last Name:</div>
+                  <div className="col-sm-7"> {this.state.secondName}</div>
+                  <div className="clearfix"></div>
+                  <div className="bot-border"></div>
+                  <div className="col-sm-5 col-xs-6 tital ">Email:</div>
+                  <div className="col-sm-7">{this.state.email}</div>
+                  <div className="clearfix"></div>
+                  <div className="bot-border"></div>
+                </div>
+                <hr></hr>
+                <div className="clearfix"></div>
+                <button type="button" className="btn btn-link">
+                  <Link to="/edituser">Edit</Link>
+                </button>
+              </div>
+            </div>
+          </div>
+        );
+      } else {
+        info = (
+          <div className="jumbotron jumbotron">
+            <div className="container">
+              <div className="alert alert-danger" role="alert">
+                <span>You are not authorized </span>
+                <a href="login" className="alert-link">
+                  Login
+                </a>
+                <span> or </span>
+                <a href="/register" className="alert-link">
+                  Register
+                </a>
+              </div>
+            </div>
+          </div>
+        );
+      }
+      return <div>{info}</div>;
+    }
   }
 }
 
