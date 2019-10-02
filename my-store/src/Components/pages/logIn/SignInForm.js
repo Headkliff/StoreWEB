@@ -1,7 +1,12 @@
 import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
+import { connect } from 'react-redux'
 import axios from "axios";
 import "./login.css";
+import { errorToast } from "../../../toasts/toast";
+import { ToastsContainer, ToastsStore } from "react-toasts";
+import { login } from "../../../Actions/userActionCreaters";
+import {compose} from 'redux';
 
 
 class SignInForm extends Component {
@@ -36,16 +41,21 @@ class SignInForm extends Component {
       .then(res => {
         localStorage.setItem("token", res.data);
         this.setState({ showError: false });
+        this.props.userlogin(this.state.nickname)
         this.props.history.push("/");
       })
       .catch(error => {
         this.setState({ showError: true });
+        errorToast("Check your Login or (and) Password")
       });
   };
 
   render() {
     return (
       <div>
+        <ToastsContainer
+        store={ToastsStore}
+      />
         <div className="container">
           <div className="jumbotron jumbotron-fluid">
             <form onSubmit={this.handleSubmit}>
@@ -98,4 +108,14 @@ class SignInForm extends Component {
     );
   }
 }
-export default SignInForm;
+const mapDispatchToProps = dispatch => ({
+    userlogin: (nickname) => {
+      dispatch(login(nickname))
+    }
+})
+
+export default compose(connect(
+  //mapStateToProps,
+  undefined,
+  mapDispatchToProps
+)(SignInForm))

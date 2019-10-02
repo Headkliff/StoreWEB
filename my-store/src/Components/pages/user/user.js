@@ -15,17 +15,7 @@ class User extends React.Component {
       loading: true
     };
   }
-
-  handleChange = e => {
-    let target = e.target;
-    let value = target.type === "checkbox" ? target.checked : target.value;
-    let name = target.name;
-
-    this.setState({
-      [name]: value
-    });
-  };
-
+  
   getUserInfo() {
     axios
       .get("https://localhost:44326/api/user", {

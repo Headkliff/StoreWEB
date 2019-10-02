@@ -1,15 +1,20 @@
-import ReactDOM from 'react-dom';
-import './index.css';
-import * as serviceWorker from './serviceWorker';
-import '../node_modules/bootstrap/dist/css/bootstrap.min.css'
-import Routes from './Routing/routes';
+import ReactDOM from "react-dom";
+import React from'react';
+import "./index.css";
+import * as serviceWorker from "./serviceWorker";
+import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
+import Routes from "./Routing/routes";
+import { createStore } from "redux";
+import { Provider } from "react-redux";
+import allReducers from "./Components/Reducers/reducers";
 
-const routing = Routes()
-//STORE->GLOBALIZED STATE
+const store = createStore(allReducers, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
 
-//ACTION INCREMENT
+const routing = Routes();
 
-
-ReactDOM.render(routing, document.getElementById('root'));
+ReactDOM.render(
+  <Provider store={store}>{routing}</Provider>,
+  document.getElementById("root")
+);
 
 serviceWorker.unregister();
