@@ -118,7 +118,7 @@ class User extends React.Component {
                   Login
                 </Link>
                 <span> or </span>
-                <Link to="/register" className="alert-link">
+                <Link to="/registration" className="alert-link">
                   Register
                 </Link>
               </div>
