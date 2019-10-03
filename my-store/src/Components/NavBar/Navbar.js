@@ -4,10 +4,13 @@ import NavItem from "../NavBar/NavItem";
 import { connect } from "react-redux";
 import { compose } from "redux";
 import { logout } from "../../Actions/userActionCreaters";
+import { Dropdown } from "react-bootstrap";
 class Navibar extends React.Component {
   handleLogOut = e => {
     e.preventDefault();
     this.props.userLogout();
+    localStorage.clear()
+    // this.props.history.push("/login");
   };
 
   navigation() {
@@ -50,16 +53,17 @@ class Navibar extends React.Component {
               <NavItem path="/" name="Home" />
             </ol>
             <ol className="nav justify-content-end">
-              <NavItem path="/user" name={this.props.nickname} />
-              <li className='nav-item active nav-item'>
-                <Link
-                  className="nav-link disabled nav-link"
-                  onClick={this.handleLogOut}
-                  to="/login"
-                >
-                  Logout{" "}
-                </Link>
-              </li>
+              <Dropdown>
+                <Dropdown.Toggle variant="success" id="dropdown-basic">
+                  {this.props.nickname}
+                </Dropdown.Toggle>
+                <Dropdown.Menu>
+                  <Dropdown.Item to="/user">Profile</Dropdown.Item>
+                  <Dropdown.Item to="/edit">Edit</Dropdown.Item>
+                  <Dropdown.Item onClick={this.handleLogOut}
+                      to="/login">Logout </Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
             </ol>
           </div>
         </nav>

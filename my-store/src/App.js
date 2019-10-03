@@ -9,8 +9,9 @@ class App extends Component {
           <div className="container">
             <h1 className="display-4">Welcome</h1>
             <p className="lead">
-              This is a modified jumbotron that occupies the entire horizontal
-              space of its parent.
+              You have come to the main page of the future store.
+              <br />
+              In the future there will be more information. Have a nice day.
             </p>
           </div>
         </div>

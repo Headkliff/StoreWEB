@@ -1,8 +1,8 @@
 import { LOGIN, LOGOUT } from "../../Actions/userActionCreaters";
 
 const initialState = {
-  authorized: false,
-  nickname: ""
+  authorized: !!localStorage.getItem('token'),
+  nickname: localStorage.getItem('nickname')
 };
 
 export default function userReducers(state = initialState, action) {

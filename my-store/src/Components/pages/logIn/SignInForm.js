@@ -40,6 +40,7 @@ class SignInForm extends Component {
       .post("https://localhost:44326/api/Login", user)
       .then(res => {
         localStorage.setItem("token", res.data);
+        localStorage.setItem("nickname",this.state.nickname);
         this.setState({ showError: false });
         this.props.userlogin(this.state.nickname)
         this.props.history.push("/");
