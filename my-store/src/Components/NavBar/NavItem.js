@@ -1,4 +1,5 @@
 import React from "react";
+import {Link} from 'react-router-dom'
 
 function NavItem (props){
     const pageURI = window.location.pathname + window.location.search;
@@ -7,14 +8,14 @@ function NavItem (props){
     const aClassName = props.disabled ? "nav-link disabled" : "nav-link";
     return (
       <li className={liClassName}>
-        <a href={props.path} className={aClassName}>
+        <Link to={props.path} className={aClassName}>
           {props.name}
           {props.path === pageURI ? (
             <span className="sr-only">(current)</span>
           ) : (
             ""
           )}
-        </a>
+        </Link>
       </li>
     );
 };

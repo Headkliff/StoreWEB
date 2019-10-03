@@ -1,38 +1,28 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import NavItem from "../NavBar/NavItem";
-import { connect } from 'react-redux'
-import {compose} from 'redux';
-
+import { connect } from "react-redux";
+import { compose } from "redux";
+import { logout } from "../../Actions/userActionCreaters";
 class Navibar extends React.Component {
-
   handleLogOut = e => {
     e.preventDefault();
+    this.props.userLogout();
   };
 
   navigation() {
-    if (this.props.authorized === null) {
+    if (this.props.isAuthorized === false) {
       return (
         <nav className="navbanr navbar-expand-lg navbar-light bg-secondary bg-warning">
-          <a className="navbar-brand" href="/">
+          <Link className="navbar-brand" to="/">
             Store
-          </a>
-          <button
-            className="navbar-toggler"
-            type="button"
-            data-toggle="collapse"
-            data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span className="navbar-toggler-icon"></span>
-          </button>
+          </Link>
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
             <ol className="navbar-nav mr-auto">
               <NavItem path="/" name="Home" />
             </ol>
             <ol className="nav justify-content-end">
-              <NavItem path="/login" name="Log In" />
+              <NavItem path="/login" name="Login" />
               <NavItem path="/registration" name="Registration" />
             </ol>
           </div>
@@ -41,9 +31,9 @@ class Navibar extends React.Component {
     } else {
       return (
         <nav className="navbanr navbar-expand-lg navbar-light bg-secondary bg-warning">
-          <a className="navbar-brand" href="/">
+          <Link className="navbar-brand" to="/">
             Store
-          </a>
+          </Link>
           <button
             className="navbar-toggler"
             type="button"
@@ -60,17 +50,16 @@ class Navibar extends React.Component {
               <NavItem path="/" name="Home" />
             </ol>
             <ol className="nav justify-content-end">
-              <button type="button" className="btn btn-link">
-                <NavItem path="/user" name={this.props.nickname} />
-              </button>
-
-              <button
-                type="button"
-                className="btn btn-link"
-                onClick={this.handleLogOut}
-              >
-                Log Out
-              </button>
+              <NavItem path="/user" name={this.props.nickname} />
+              <li className='nav-item active nav-item'>
+                <Link
+                  className="nav-link disabled nav-link"
+                  onClick={this.handleLogOut}
+                  to="/login"
+                >
+                  Logout{" "}
+                </Link>
+              </li>
             </ol>
           </div>
         </nav>
@@ -82,19 +71,20 @@ class Navibar extends React.Component {
   }
 }
 
-// const mapDispatchToProps = dispatch => ({
-//   onClick: ()=>  {
-//     dispatch(logout())
-//   }
-// })
+const mapDispatchToProps = dispatch => ({
+  userLogout: () => {
+    dispatch(logout());
+  }
+});
 
 const mapStateToProps = state => ({
-
-  nickname : state.user.nickname,
+  nickname: state.user.nickname,
   isAuthorized: state.user.authorized
-  }
-);
+});
 
-export default compose(connect(
-  // mapDispatchToProps, 
-  mapStateToProps)(Navibar));
+export default compose(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(Navibar)
+);

@@ -2,6 +2,11 @@ import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
 import axios from "axios";
 import "./register.css";
+import { login } from "../../../Actions/userActionCreaters";
+import { compose } from "redux";
+import { connect } from "react-redux";
+import { ToastsContainer, ToastsStore } from "react-toasts";
+import { errorToast } from "../../../toasts/toast";
 
 class SignUpForm extends Component {
   constructor() {
@@ -38,23 +43,23 @@ class SignUpForm extends Component {
       secondName: this.state.secondName,
       email: this.state.email
     };
-    console.log("The form was submitted with the following data:");
-    console.log(this.state);
 
     axios
       .post("https://localhost:44326/api/register", user)
       .then(res => {
         localStorage.setItem("token", res.data);
+        this.props.userlogin(this.state.nickname);
         this.props.history.push("/");
       })
       .catch(function(error) {
-        alert("This user exist!");
+        errorToast("User with this Nickname alrady exist")
       });
   }
 
   render() {
     return (
       <div className="container">
+        <ToastsContainer store={ToastsStore} />
         <div className="jumbotron jumbotron-fluid">
           <form onSubmit={this.handleSubmit}>
             <div className="form-row">
@@ -66,7 +71,7 @@ class SignUpForm extends Component {
                   id="nickname"
                   required
                   minLength="4"
-                  maxLength='16'
+                  maxLength="16"
                   placeholder="Enter your nickname"
                   name="nickname"
                   value={this.state.nickname}
@@ -160,4 +165,15 @@ class SignUpForm extends Component {
     );
   }
 }
-export default SignUpForm;
+const mapDispatchToProps = dispatch => ({
+  userlogin: nickname => {
+    dispatch(login(nickname));
+  }
+});
+
+export default compose(
+  connect(
+    undefined,
+    mapDispatchToProps
+  )(SignUpForm)
+);

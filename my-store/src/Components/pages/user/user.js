@@ -1,6 +1,8 @@
 import React from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { connect } from "react-redux";
+import { compose } from "redux";
 
 class User extends React.Component {
   constructor(props) {
@@ -15,7 +17,7 @@ class User extends React.Component {
       loading: true
     };
   }
-  
+
   getUserInfo() {
     axios
       .get("https://localhost:44326/api/user", {
@@ -31,8 +33,8 @@ class User extends React.Component {
           loading: false
         });
       })
-      .catch(error=> {
-          this.setState({ authorize: false, loading: false });
+      .catch(error => {
+        this.setState({ authorize: false, loading: false });
       });
   }
 
@@ -63,7 +65,7 @@ class User extends React.Component {
         </div>
       );
     else {
-      if (this.state.authorize) {
+      if (this.props.isAuthorized) {
         info = (
           <div className="center">
             <div className="container">
@@ -112,13 +114,13 @@ class User extends React.Component {
             <div className="container">
               <div className="alert alert-danger" role="alert">
                 <span>You are not authorized </span>
-                <a href="login" className="alert-link">
+                <Link to="login" className="alert-link">
                   Login
-                </a>
+                </Link>
                 <span> or </span>
-                <a href="/register" className="alert-link">
+                <Link to="/register" className="alert-link">
                   Register
-                </a>
+                </Link>
               </div>
             </div>
           </div>
@@ -129,4 +131,9 @@ class User extends React.Component {
   }
 }
 
-export default User;
+const mapStateToProps = state => ({
+  nickname: state.user.nickname,
+  isAuthorized: state.user.authorized
+});
+
+export default compose(connect(mapStateToProps)(User));

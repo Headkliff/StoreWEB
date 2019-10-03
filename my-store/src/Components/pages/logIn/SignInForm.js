@@ -108,6 +108,7 @@ class SignInForm extends Component {
     );
   }
 }
+
 const mapDispatchToProps = dispatch => ({
     userlogin: (nickname) => {
       dispatch(login(nickname))
