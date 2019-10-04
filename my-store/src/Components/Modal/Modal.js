@@ -1,11 +1,12 @@
 import React from "react";
 import { Button, Modal } from "react-bootstrap";
+
 class ModalConfirm extends React.Component { 
   render() {
     return (
       <>
       <div>Hahahaha</div>
-        <Modal show={this.props.show} onHide={this.props.handleClose}>
+        <Modal show={this.props.show} onHide={this.props.handleClose} animation={false}>
           <Modal.Header closeButton>
             <Modal.Title>Confirm</Modal.Title>
           </Modal.Header>

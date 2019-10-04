@@ -7,6 +7,7 @@ import { compose } from "redux";
 import { connect } from "react-redux";
 import { ToastsContainer, ToastsStore } from "react-toasts";
 import { errorToast } from "../../../toasts/toast";
+import ModalConfirm from "../../Modal/Modal";
 
 class SignUpForm extends Component {
   constructor(props) {
@@ -68,6 +69,11 @@ class SignUpForm extends Component {
   render() {
     return (
       <>
+        <ModalConfirm
+          show={this.state.Confirm}
+          handleSubmit={this.handleSubmit}
+          handleClose={this.handleClose}
+        ></ModalConfirm>
         <div className="container">
           <ToastsContainer store={ToastsStore} />
           <div className="jumbotron jumbotron-fluid">
@@ -160,7 +166,7 @@ class SignUpForm extends Component {
                       <button
                         type="submit"
                         className="btn btn-primary"
-                        onClick={this.handleSubmit}
+                        onClick={() => this.showConfirmModal()}
                       >
                         Sign Up
                       </button>
