@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
-import { connect } from 'react-redux'
+import { connect } from "react-redux";
 import axios from "axios";
 import "./login.css";
 import { errorToast } from "../../../toasts/toast";
 import { ToastsContainer, ToastsStore } from "react-toasts";
 import { login } from "../../../Actions/userActionCreaters";
-import {compose} from 'redux';
+import { compose } from "redux";
 
 
 class SignInForm extends Component {
@@ -40,23 +40,21 @@ class SignInForm extends Component {
       .post("https://localhost:44326/api/Login", user)
       .then(res => {
         localStorage.setItem("token", res.data);
-        localStorage.setItem("nickname",this.state.nickname);
+        localStorage.setItem("nickname", this.state.nickname);
         this.setState({ showError: false });
-        this.props.userlogin(this.state.nickname)
+        this.props.userlogin(this.state.nickname);
         this.props.history.push("/");
       })
       .catch(error => {
         this.setState({ showError: true });
-        errorToast("Check your Login or (and) Password")
+        errorToast("Check your Login or (and) Password");
       });
   };
 
   render() {
     return (
       <div>
-        <ToastsContainer
-        store={ToastsStore}
-      />
+        <ToastsContainer store={ToastsStore} />
         <div className="container">
           <div className="jumbotron jumbotron-fluid">
             <form onSubmit={this.handleSubmit}>
@@ -93,13 +91,21 @@ class SignInForm extends Component {
                     onChange={this.handleChange}
                   />
                 </div>
-                <div>
-                  <button type="submit" className="btn btn-primary">
-                    Sign In
-                  </button>
-                  <NavLink to="/registration" className="Link">
-                    Create an account
-                  </NavLink>
+                <div className="FormField">
+                  <div>
+                    <ul className="nav justify-content-end">
+                      <li>
+                        <button type="submit" className="btn btn-primary">
+                          Sign In
+                        </button>
+                      </li>
+                      <li>
+                        <NavLink to="/registration" className="Link">
+                          Create an account
+                        </NavLink>
+                      </li>
+                    </ul>
+                  </div>
                 </div>
               </div>
             </form>
@@ -111,13 +117,15 @@ class SignInForm extends Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-    userlogin: (nickname) => {
-      dispatch(login(nickname))
-    }
-})
+  userlogin: nickname => {
+    dispatch(login(nickname));
+  }
+});
 
-export default compose(connect(
-  //mapStateToProps,
-  undefined,
-  mapDispatchToProps
-)(SignInForm))
+export default compose(
+  connect(
+    //mapStateToProps,
+    undefined,
+    mapDispatchToProps
+  )(SignInForm)
+);

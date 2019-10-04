@@ -13,7 +13,6 @@ class User extends React.Component {
       email: "",
       firstName: "",
       secondName: "",
-      authorized: false,
       loading: true
     };
   }
@@ -99,11 +98,6 @@ class User extends React.Component {
                   <div className="clearfix"></div>
                   <div className="bot-border"></div>
                 </div>
-                <hr></hr>
-                <div className="clearfix"></div>
-                <button type="button" className="btn btn-link">
-                  <Link to="/edituser">Edit</Link>
-                </button>
               </div>
             </div>
           </div>
