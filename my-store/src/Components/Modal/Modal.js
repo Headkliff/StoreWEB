@@ -5,12 +5,11 @@ class ModalConfirm extends React.Component {
   render() {
     return (
       <>
-      <div>Hahahaha</div>
         <Modal show={this.props.show} onHide={this.props.handleClose} animation={false}>
           <Modal.Header closeButton>
             <Modal.Title>Confirm</Modal.Title>
           </Modal.Header>
-          <Modal.Body>Woohoo, you're reading this text in a modal!</Modal.Body>
+          <Modal.Body>Are you shure about your data!</Modal.Body>
           <Modal.Footer>
             <Button variant="secondary" 
             onClick={()=>this.props.handleClose()}
@@ -19,6 +18,7 @@ class ModalConfirm extends React.Component {
             </Button>
             <Button
               variant="primary"
+              type='submit'
               onClick={() => {
                 this.props.handleSubmit();
                 this.props.handleClose();

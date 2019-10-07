@@ -8,11 +8,9 @@ class EditUser extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      nickname: "",
       email: "",
       firstName: "",
-      secondName: "",
-      newPassword: ""
+      secondName: ""
     };
     this.getUserInfo();
   }
@@ -29,20 +27,24 @@ class EditUser extends React.Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    const user = {
-      nickname: this.state.nickname,
-      password: this.state.newPassword,
+    const newUserData = {
+      email: this.state.email,
       firstName: this.state.firstName,
-      secondName: this.state.secondName,
-      email: this.state.email
+      secondName: this.state.secondName
     };
-    console.log("The form was submitted with the following data:");
-    console.log(this.state);
+    console.log(newUserData);
 
-    axios.post("https://localhost:44326/api/user/edit", user).then(res => {
-      localStorage.setItem("token", res.data);
-      this.props.history.push("/user");
-    });
+    axios
+      .post("https://localhost:44326/api/User/edit", newUserData, {
+        headers: { Authorization: "Bearer " + localStorage.getItem("token") }
+      })
+      .then(res => {
+        localStorage.setItem("token", res.data);
+        this.props.history.push("/user");
+      })
+      .catch(error => {
+        console.log(error);
+      });
   };
 
   getUserInfo() {
@@ -52,7 +54,6 @@ class EditUser extends React.Component {
       })
       .then(res => {
         this.setState({
-          nickname: res.data.nickname,
           email: res.data.email,
           firstName: res.data.firstName,
           secondName: res.data.secondName
@@ -65,7 +66,7 @@ class EditUser extends React.Component {
 
   userEdit() {
     if (!!this.props.isAuthorized) {
-      return(
+      return (
         <div className="container">
           <div className="panel panel-default">
             <div className="panel-heading">
@@ -84,10 +85,13 @@ class EditUser extends React.Component {
                     <input
                       type="text"
                       className="form-control"
-                      id="inputFirstName"
+                      id="firstName"
+                      name="firstName"
                       minLength="4"
                       maxLength="25"
                       placeholder={this.state.firstName}
+                      value={this.state.firstName}
+                      onChange={this.handleChange}
                     />
                   </div>
                 </div>
@@ -103,10 +107,13 @@ class EditUser extends React.Component {
                     <input
                       type="text"
                       className="form-control"
-                      id="inpotSecond"
+                      id="secondName"
+                      name="secondName"
                       minLength="4"
                       maxLength="25"
                       placeholder={this.state.secondName}
+                      value={this.state.secondName}
+                      onChange={this.handleChange}
                     />
                   </div>
                 </div>
@@ -119,27 +126,11 @@ class EditUser extends React.Component {
                     <input
                       type="email"
                       className="form-control"
-                      id="inputEmail"
+                      id="email"
+                      name="email"
                       placeholder={this.state.email}
-                    />
-                  </div>
-                </div>
-
-                <div className="form-group row">
-                  <label
-                    htmlFor="inputPassword"
-                    className="col-sm-2 col-form-label"
-                  >
-                    New Password:
-                  </label>
-                  <div className="col-sm-10">
-                    <input
-                      type="password"
-                      className="form-control"
-                      id="inputNewPass"
-                      minLength="8"
-                      maxLength="16"
-                      placeholder={this.state.newPassword}
+                      value={this.state.email}
+                      onChange={this.handleChange}
                     />
                   </div>
                 </div>
@@ -154,9 +145,9 @@ class EditUser extends React.Component {
             </form>
           </div>
         </div>
-      )
+      );
     } else {
-      return(
+      return (
         <div className="jumbotron jumbotron">
           <div className="container">
             <div className="alert alert-danger" role="alert">
@@ -171,7 +162,7 @@ class EditUser extends React.Component {
             </div>
           </div>
         </div>
-      )
+      );
     }
   }
 

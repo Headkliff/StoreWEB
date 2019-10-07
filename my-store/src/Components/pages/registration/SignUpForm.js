@@ -5,8 +5,12 @@ import "./register.css";
 import { login } from "../../../Actions/userActionCreaters";
 import { compose } from "redux";
 import { connect } from "react-redux";
-import { ToastsContainer, ToastsStore } from "react-toasts";
-import { errorToast } from "../../../toasts/toast";
+import {
+  ToastsContainer,
+  ToastsStore,
+  ToastsContainerPosition
+} from "react-toasts";
+import { errorToast } from "../../toasts/toast";
 import ModalConfirm from "../../Modal/Modal";
 
 class SignUpForm extends Component {
@@ -17,16 +21,14 @@ class SignUpForm extends Component {
       nickname: "",
       email: "",
       password: "",
+      confirmPassword: "",
       firstName: "",
       secondName: "",
       Confirm: false
     };
-
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleChange(e) {
+  handleChange = e => {
     let target = e.target;
     let value = target.type === "checkbox" ? target.checked : target.value;
     let name = target.name;
@@ -34,7 +36,13 @@ class SignUpForm extends Component {
     this.setState({
       [name]: value
     });
-  }
+  };
+
+  handleValidation = () => {
+    if (this.password !== this.confirmPassword) {
+      errorToast("Passwords don't match");
+    }
+  };
 
   handleClose = () => {
     this.setState({ Confirm: false });
@@ -44,27 +52,32 @@ class SignUpForm extends Component {
     this.setState({ Confirm: true });
   };
 
-  handleSubmit(e) {
-    e.preventDefault();
-    const user = {
-      nickname: this.state.nickname,
-      password: this.state.password,
-      firstName: this.state.firstName,
-      secondName: this.state.secondName,
-      email: this.state.email
-    };
+  handleSubmit = e => {
+    e.preventDefaulf()
+    const { password, confirmPassword } = this.state;
+    if (password !== confirmPassword) {
+      errorToast("Passwords don't match");
+    } else {
+      const user = {
+        nickname: this.state.nickname,
+        password: this.state.password,
+        firstName: this.state.firstName,
+        secondName: this.state.secondName,
+        email: this.state.email
+      };
 
-    axios
-      .post("https://localhost:44326/api/register", user)
-      .then(res => {
-        localStorage.setItem("token", res.data);
-        this.props.userlogin(this.state.nickname);
-        this.props.history.push("/");
-      })
-      .catch(function(error) {
-        errorToast("User with this Nickname alrady exist");
-      });
-  }
+      axios
+        .post("https://localhost:44326/api/login/registration", user)
+        .then(res => {
+          localStorage.setItem("token", res.data);
+          this.props.userlogin(this.state.nickname);
+          this.props.history.push("/");
+        })
+        .catch(error => {
+          errorToast("User with this Nickname alrady exist");
+        });
+    }
+  };
 
   render() {
     return (
@@ -75,9 +88,12 @@ class SignUpForm extends Component {
           handleClose={this.handleClose}
         ></ModalConfirm>
         <div className="container">
-          <ToastsContainer store={ToastsStore} />
+          <ToastsContainer
+            store={ToastsStore}
+            position={ToastsContainerPosition.TOP_RIGHT}
+          />
           <div className="jumbotron jumbotron-fluid">
-            <form onSubmit={this.handleSubmit}>
+            <form onSubmit={this.shouldComponentUpdate}>
               <div className="form-row">
                 <div className="col-md-4 mb-3">
                   <label htmlFor="nickname">Nickname</label>
@@ -110,7 +126,8 @@ class SignUpForm extends Component {
                     onChange={this.handleChange}
                   />
                 </div>
-
+              </div>
+              <div className="form-row">
                 <div className="col-md-4 mb-3">
                   <label htmlFor="password">Password</label>
                   <input
@@ -126,6 +143,21 @@ class SignUpForm extends Component {
                     onChange={this.handleChange}
                   />
                 </div>
+                <div className="col-md-4 mb-3">
+                  <label htmlFor="password">Confirm your password</label>
+                  <input
+                    type="password"
+                    id="confirmPassword"
+                    required
+                    minLength="8"
+                    maxLength="16"
+                    className="form-control"
+                    placeholder="Confirm your password"
+                    name="confirmPassword"
+                    value={this.state.confirmPassword}
+                    onChange={this.handleChange}
+                  />
+                </div>{" "}
               </div>
               <div className="form-row">
                 <div className="col-md-6 mb-3">
