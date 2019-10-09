@@ -3,6 +3,7 @@ import axios from "axios";
 import { connect } from "react-redux";
 import { compose } from "redux";
 import { Link } from "react-router-dom";
+import ModalConfirm from "../../../Modal/ModalConfirm";
 
 class EditUser extends React.Component {
   constructor(props) {
@@ -67,84 +68,95 @@ class EditUser extends React.Component {
   userEdit() {
     if (!!this.props.isAuthorized) {
       return (
-        <div className="container">
-          <div className="panel panel-default">
-            <div className="panel-heading">
-              <h4 align="center">User info editing</h4>
-            </div>
-            <form onSubmit={this.handleSubmit}>
-              <div align="center">
-                <div className="form-group row">
-                  <label
-                    htmlFor="firstName"
-                    className="col-sm-2 col-form-label"
-                  >
-                    First Name:
-                  </label>
-                  <div className="col-sm-10">
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="firstName"
-                      name="firstName"
-                      minLength="4"
-                      maxLength="25"
-                      placeholder={this.state.firstName}
-                      value={this.state.firstName}
-                      onChange={this.handleChange}
-                    />
-                  </div>
-                </div>
-
-                <div className="form-group row">
-                  <label
-                    htmlFor="inputSecondName"
-                    className="col-sm-2 col-form-label"
-                  >
-                    Second Name:
-                  </label>
-                  <div className="col-sm-10">
-                    <input
-                      type="text"
-                      className="form-control"
-                      id="secondName"
-                      name="secondName"
-                      minLength="4"
-                      maxLength="25"
-                      placeholder={this.state.secondName}
-                      value={this.state.secondName}
-                      onChange={this.handleChange}
-                    />
-                  </div>
-                </div>
-
-                <div className="form-group row">
-                  <label htmlFor="Email" className="col-sm-2 col-form-label">
-                    Email:
-                  </label>
-                  <div className="col-sm-10">
-                    <input
-                      type="email"
-                      className="form-control"
-                      id="email"
-                      name="email"
-                      placeholder={this.state.email}
-                      value={this.state.email}
-                      onChange={this.handleChange}
-                    />
-                  </div>
-                </div>
+        <>
+          <ModalConfirm
+            text="Apply changes?"
+            submit={this.handleSubmit}
+          ></ModalConfirm>
+          <div className="container">
+            <div className="panel panel-default">
+              <div className="panel-heading">
+                <h4 align="center">User info editing</h4>
               </div>
-              <div className="FormField">
+              <form onSubmit={this.handleSubmit}>
                 <div align="center">
-                  <button type="submit" className="btn btn-primary">
-                    Submit
-                  </button>
+                  <div className="form-group row">
+                    <label
+                      htmlFor="firstName"
+                      className="col-sm-2 col-form-label"
+                    >
+                      First Name:
+                    </label>
+                    <div className="col-sm-10">
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="firstName"
+                        name="firstName"
+                        minLength="4"
+                        maxLength="25"
+                        placeholder={this.state.firstName}
+                        value={this.state.firstName}
+                        onChange={this.handleChange}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="form-group row">
+                    <label
+                      htmlFor="inputSecondName"
+                      className="col-sm-2 col-form-label"
+                    >
+                      Second Name:
+                    </label>
+                    <div className="col-sm-10">
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="secondName"
+                        name="secondName"
+                        minLength="4"
+                        maxLength="25"
+                        placeholder={this.state.secondName}
+                        value={this.state.secondName}
+                        onChange={this.handleChange}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="form-group row">
+                    <label htmlFor="Email" className="col-sm-2 col-form-label">
+                      Email:
+                    </label>
+                    <div className="col-sm-10">
+                      <input
+                        type="email"
+                        className="form-control"
+                        id="email"
+                        name="email"
+                        placeholder={this.state.email}
+                        value={this.state.email}
+                        onChange={this.handleChange}
+                      />
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </form>
+                <div className="FormField">
+                  <div align="center">
+                    <button
+                      type="submit"
+                      data-toggle="modal"
+                      data-target="#submitModal"
+                      className="btn btn-primary"
+                    >
+                      Submit
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
           </div>
-        </div>
+        </>
       );
     } else {
       return (

@@ -4,10 +4,13 @@ import { connect } from "react-redux";
 import axios from "axios";
 import "./login.css";
 import { errorToast } from "../../toasts/toast";
-import { ToastsContainer, ToastsStore } from "react-toasts";
+import {
+  ToastsContainer,
+  ToastsStore,
+  ToastsContainerPosition
+} from "react-toasts";
 import { login } from "../../../Actions/userActionCreaters";
 import { compose } from "redux";
-
 
 class SignInForm extends Component {
   constructor(props) {
@@ -54,24 +57,43 @@ class SignInForm extends Component {
   render() {
     return (
       <div>
-        <ToastsContainer store={ToastsStore} />
+        <ToastsContainer
+          store={ToastsStore}
+          position={ToastsContainerPosition.TOP_RIGHT}
+        />
         <div className="container">
           <form onSubmit={this.handleSubmit}>
-            <div class="input-group mb-3">
-              <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1" onChange={this.handleChange} />
+            <div className="input-group mb-3">
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Username"
+                aria-label="Username"
+                aria-describedby="basic-addon1"
+                name="nickname"
+                onChange={this.handleChange}
+              />
             </div>
 
             <div class="input-group mb-3">
-              <input type="password" class="form-control" placeholder="Password" aria-label="Recipient's username" aria-describedby="basic-addon2" onChange={this.handleChange}/>
+              <input
+                type="password"
+                className="form-control"
+                placeholder="Password"
+                aria-label="Recipient's username"
+                aria-describedby="basic-addon2"
+                name="password"
+                onChange={this.handleChange}
+              />
             </div>
             <div className="FormField">
               <div>
-                <button type="submit" className="btn btn-primary" >
+                <button type="submit" className="btn btn-primary">
                   Sign In
-                        </button>
-                <NavLink to="/registration" className="Link">
+                </button>
+                <NavLink to="/registration" className="Link ml-2">
                   Create an account
-                        </NavLink>
+                </NavLink>
               </div>
             </div>
           </form>

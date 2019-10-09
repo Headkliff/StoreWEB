@@ -16,8 +16,8 @@ const Routes = () => {
         <Route exact path="/" component={App} />
         <Route path="/login" component={SignInForm} />
         <Route path="/registration" component={SignUpForm} />
-        <Route path="/user" component={User} />
-        <Route path="/edituser" component={EditUser} />
+        <Route exact path="/user" component={User} />
+        <Route path="/user/edit" component={EditUser} />
         <Route path="*" component={Notfound} />
       </Switch>
     </Router>

@@ -11,7 +11,23 @@ import {
   ToastsContainerPosition
 } from "react-toasts";
 import { errorToast } from "../../toasts/toast";
-import ModalConfirm from "../../Modal/Modal";
+import ModalConfirm from "../../Modal/ModalConfirm";
+
+const formValid = ({ formErrors, ...rest }) => {
+  let valid = true;
+
+  Object.values(formErrors).forEach(val => val.length > 0 && (valid = false));
+
+  Object.values(rest).forEach(val => {
+    val === null && (valid = false);
+  });
+
+  return valid;
+};
+
+const emailRegex = RegExp(
+  /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
+);
 
 class SignUpForm extends Component {
   constructor(props) {
@@ -24,33 +40,62 @@ class SignUpForm extends Component {
       confirmPassword: "",
       firstName: "",
       secondName: "",
-      Confirm: false
+      formErrors: {
+        nickname: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+        firstName: "",
+        secondName: ""
+      }
     };
   }
 
   handleChange = e => {
+    e.preventDefault();
     let target = e.target;
     let value = target.type === "checkbox" ? target.checked : target.value;
     let name = target.name;
+    let formErrors = this.state.formErrors;
+
+    switch (name) {
+      case "nickname":
+        formErrors.nickname =
+          value.length < 4 ? "minimum 4 characaters required" : "";
+        break;
+      case "firstName":
+        formErrors.firstName =
+          value.length < 3 ? "minimum 3 characaters required" : "";
+        break;
+      case "lastName":
+        formErrors.lastName =
+          value.length < 3 ? "minimum 3 characaters required" : "";
+        break;
+      case "email":
+        formErrors.email = emailRegex.test(value)
+          ? ""
+          : "invalid email address";
+        break;
+      case "password":
+        formErrors.password =
+          value.length < 8 ? "minimum 8 characaters required" : "";
+        break;
+      case "confirmPassword":
+        formErrors.confirmPassword =
+          value.length < 8 ? "minimum 8 characaters required" : "";
+        break;
+      default:
+        break;
+    }
 
     this.setState({
       [name]: value
     });
   };
 
-  handleClose = () => {
-    this.setState({ Confirm: false });
-  };
-
-  showConfirmModal = () => {
-    this.setState({ Confirm: true });
-  };
-
   handleSubmit = e => {
-    const { password, confirmPassword } = this.state;
-    if (password !== confirmPassword) {
-      errorToast("Passwords don't match");
-    } else {
+    e.preventDefault();
+    if (formValid(this.state) && (this.state.password === this.state.confirmPassword)) {
       const user = {
         nickname: this.state.nickname,
         password: this.state.password,
@@ -67,44 +112,53 @@ class SignUpForm extends Component {
           this.props.history.push("/");
         })
         .catch(error => {
-          errorToast("User with this Nickname alrady exist");
+          errorToast("Something went wrong");
         });
+    } else {
+      errorToast("Check your data");
     }
   };
 
   render() {
+    const { formErrors } = this.state;
     return (
       <>
         <ModalConfirm
-          show={this.state.Confirm}
-          handleSubmit={this.handleSubmit}
-          handleClose={this.handleClose}
-        ></ModalConfirm>
+          text="Are you sure of the data entered?"
+          submit={this.handleSubmit}
+        />
         <div className="container">
           <ToastsContainer
             store={ToastsStore}
             position={ToastsContainerPosition.TOP_RIGHT}
           />
-          <div className='form-group'>
-            <form onSubmit={this.shouldComponentUpdate}>
-              <div className="input-group flex-nowrap">
-                <div className="col-md-4 mb-3">
+          <div className="form-group">
+            <form onSubmit={this.handleSubmit}>
+              <div className="row">
+                <div className="col-4 form-group">
                   <label htmlFor="nickname">Nickname</label>
                   <input
                     type="text"
-                    className="form-control"
+                    className={
+                      "form-control " +
+                      (formErrors.nickname.length > 0 ? "is-invalid" : null)
+                    }
                     id="nickname"
                     required
-                    minLength="4"
-                    maxLength="16"
                     placeholder="Enter your nickname"
                     name="nickname"
+                    noValidate
                     value={this.state.nickname}
                     onChange={this.handleChange}
                   />
+                  {formErrors.nickname.length > 0 && (
+                    <span className="invalid-feedback">
+                      {formErrors.nickname}
+                    </span>
+                  )}
                 </div>
 
-                <div className="col-md-4 mb-3">
+                <div className="col-8 form-group">
                   <label className="Label" htmlFor="email">
                     Email
                   </label>
@@ -113,15 +167,22 @@ class SignUpForm extends Component {
                     id="email"
                     name="email"
                     required
-                    className="form-control"
+                    className={
+                      "form-control " +
+                      (formErrors.email.length > 0 ? "is-invalid" : null)
+                    }
                     placeholder="Enter your email"
+                    noValidate
                     value={this.state.email}
                     onChange={this.handleChange}
                   />
+                  {formErrors.email.length > 0 && (
+                    <span className="invalid-feedback">{formErrors.email}</span>
+                  )}
                 </div>
               </div>
-              <div className="input-group flex-nowrap">
-                <div className="col-md-4 mb-3">
+              <div className="row ">
+                <div className="col-6 form-group">
                   <label htmlFor="password">Password</label>
                   <input
                     type="password"
@@ -129,54 +190,83 @@ class SignUpForm extends Component {
                     required
                     minLength="8"
                     maxLength="16"
-                    className="form-control"
+                    className={
+                      "form-control " +
+                      (formErrors.password.length > 0 ? "is-invalid" : null)
+                    }
                     placeholder="Enter your password"
                     name="password"
+                    noValidate
                     value={this.state.password}
                     onChange={this.handleChange}
                   />
+                  {formErrors.password.length > 0 && (
+                    <span className="errorMessage">{formErrors.password}</span>
+                  )}
                 </div>
-                <div className="col-md-4 mb-3">
-                  <label htmlFor="password">Confirm your password</label>
+                <div className="col-6 form-group">
+                  <label htmlFor="confirmPassword">Confirm your password</label>
                   <input
                     type="password"
                     id="confirmPassword"
                     required
                     minLength="8"
                     maxLength="16"
-                    className="form-control"
+                    className={
+                      "form-control " +
+                      (formErrors.confirmPassword.length > 0
+                        ? "is-invalid"
+                        : null)
+                    }
                     placeholder="Confirm your password"
                     name="confirmPassword"
+                    noValidate
                     value={this.state.confirmPassword}
                     onChange={this.handleChange}
                   />
+                  {formErrors.confirmPassword.length > 0 && (
+                    <span className="errorMessage">
+                      {formErrors.confirmPassword}
+                    </span>
+                  )}
                 </div>{" "}
               </div>
-              <div className="input-group flex-nowrap">
-                <div className="col-md-6 mb-3">
+              <div className="row">
+                <div className="col-6 form-group">
                   <label htmlFor="firstName">First Name</label>
                   <input
                     type="text"
                     id="firstName"
                     maxLength="25"
-                    className="form-control"
+                    className={
+                      "form-control " +
+                      (formErrors.firstName.length > 0 ? "is-invalid" : null)
+                    }
                     placeholder="Enter your First Name"
                     name="firstName"
+                    noValidate
                     value={this.state.firstName}
                     onChange={this.handleChange}
                     required
                   />
+                  {formErrors.firstName.length > 0 && (
+                    <span className="errorMessage">{formErrors.firstName}</span>
+                  )}
                 </div>
 
-                <div className="col-md-6 mb-3">
+                <div className="col-6 form-group">
                   <label htmlFor="secondName">Second Name</label>
                   <input
                     type="text"
                     id="secondName"
                     maxLength="25"
-                    className="form-control"
+                    className={
+                      "form-control " +
+                      (formErrors.secondName.length > 0 ? "is-invalid" : null)
+                    }
                     placeholder="Enter your Second Name"
                     name="secondName"
+                    noValidate
                     value={this.state.secondName}
                     onChange={this.handleChange}
                     required
@@ -184,18 +274,19 @@ class SignUpForm extends Component {
                 </div>
               </div>
 
-              <div className="FormField">
+              <div>
                 <div>
                   <button
                     type="button"
                     className="btn btn-primary"
-                    onClick={() => this.showConfirmModal()}
+                    data-toggle="modal"
+                    data-target="#submitModal"
                   >
                     Sign Up
-                      </button>
-                  <NavLink to="/login" className="Link" align="right">
+                  </button>
+                  <NavLink to="/login" className="Link ml-2" align="right">
                     I'm already member
-                      </NavLink>
+                  </NavLink>
                 </div>
               </div>
             </form>

@@ -24,7 +24,6 @@ class User extends React.Component {
       })
       .then(res => {
         this.setState({
-          authorize: true,
           nickname: res.data.nickname,
           email: res.data.email,
           firstName: res.data.firstName,
@@ -33,7 +32,7 @@ class User extends React.Component {
         });
       })
       .catch(error => {
-        this.setState({ authorize: false, loading: false });
+        this.setState({ loading: false });
       });
   }
 
@@ -43,12 +42,9 @@ class User extends React.Component {
       return (
         <div className="center">
           <div className="container">
-            <div className="panel panel-default">
-              <div className="panel-heading">
-                <div className="loaded">User Details</div>
-              </div>
+            <div className="cart">
             </div>
-            <div className="panel-body">
+            <div className="cart-body">
               <div className="box box-info">
                 <div className="d-flex align-items-center">
                   <strong>Loading...</strong>
@@ -68,12 +64,9 @@ class User extends React.Component {
         info = (
           <div className="center">
             <div className="container">
-              <div className="panel panel-default">
-                <div className="panel-heading">
-                  <div className="loaded">User Details</div>
-                </div>
+              <div className="cart">
 
-                <div className="panel-body">
+                <div className="cart-body">
                   <div className="box box-info">
                     <div className="col-sm-6">
                       <span>
@@ -83,18 +76,13 @@ class User extends React.Component {
                     <div className="clearfix"></div>
                     <hr></hr>
                   </div>
-                  <div className="col-sm-5 col-xs-6 tital ">First Name:</div>
-                  <div className="col-sm-7 col-xs-6 ">
-                    {this.state.firstName}
-                  </div>
+                  <div className="col-sm-5 col-xs-6 tital "><strong>First Name:</strong>{this.state.firstName}</div>
                   <div className="clearfix"></div>
                   <div className="bot-border"></div>
-                  <div className="col-sm-5 col-xs-6 tital ">Last Name:</div>
-                  <div className="col-sm-7"> {this.state.secondName}</div>
+                  <div className="col-sm-5 col-xs-6 tital "><strong>Last Name:</strong>{this.state.secondName}</div>
                   <div className="clearfix"></div>
                   <div className="bot-border"></div>
-                  <div className="col-sm-5 col-xs-6 tital ">Email:</div>
-                  <div className="col-sm-7">{this.state.email}</div>
+                  <div className="col-sm-5 col-xs-6 tital "><strong>Email:</strong>{this.state.email}</div>
                   <div className="clearfix"></div>
                   <div className="bot-border"></div>
                 </div>
