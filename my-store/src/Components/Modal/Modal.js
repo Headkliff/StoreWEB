@@ -1,33 +1,28 @@
 import React from "react";
-import { Button, Modal } from "react-bootstrap";
 
-class ModalConfirm extends React.Component { 
+class ModalConfirm extends React.Component {
   render() {
     return (
       <>
-        <Modal show={this.props.show} onHide={this.props.handleClose} animation={false}>
-          <Modal.Header closeButton>
-            <Modal.Title>Confirm</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>Are you shure about your data!</Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" 
-            onClick={()=>this.props.handleClose()}
-            >
-              Close
-            </Button>
-            <Button
-              variant="primary"
-              type='submit'
-              onClick={() => {
-                this.props.handleSubmit();
-                this.props.handleClose();
-              }}
-            >
-              Save Changes
-            </Button>
-          </Modal.Footer>
-        </Modal>
+        <div className="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div className="modal-dialog" role="document">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title" id="exampleModalLabel">Submit</h5>
+                <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div className="modal-body">
+                Are you shure
+      </div>
+              <div class="modal-footer">
+                <button type="button" className="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" className="btn btn-primary">Save changes</button>
+              </div>
+            </div>
+          </div>
+        </div>
       </>
     );
   }

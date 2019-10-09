@@ -1,10 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import NavItem from "../NavBar/NavItem";
 import { connect } from "react-redux";
 import { compose } from "redux";
 import { logout } from "../../Actions/userActionCreaters";
-import { Dropdown } from "react-bootstrap";
 class Navibar extends React.Component {
   handleLogOut = e => {
     e.preventDefault();
@@ -16,43 +14,16 @@ class Navibar extends React.Component {
   navigation() {
     if (this.props.isAuthorized === false) {
       return (
-        <nav className="navbanr navbar-expand-lg navbar-light bg-secondary bg-warning">
-          <Link className="navbar-brand" to="/">
-            Store
-          </Link>
-          <div className="collapse navbar-collapse" id="navbarSupportedContent">
-            <ol className="navbar-nav mr-auto">
-              <NavItem path="/" name="Home" />
-            </ol>
-            <ol className="nav justify-content-end">
-              <NavItem path="/login" name="Login" />
-              <NavItem path="/registration" name="Registration" />
-            </ol>
-          </div>
-        </nav>
-      );
-    } else {
-      return (
-        <nav className="navbanr navbar-expand-lg navbar-light bg-secondary bg-warning">
-          <Link className="navbar-brand" to="/">
-            Store
-          </Link>
-          <div className="collapse navbar-collapse" id="navbarSupportedContent">
-            <ol className="navbar-nav mr-auto">
-              <NavItem path="/" name="Home" />
-            </ol>
-            <ol className="nav justify-content-end">
-              <Dropdown>
-                <Dropdown.Toggle variant="Secondary" id="dropdown-basic">
-                  {this.props.nickname}
-                </Dropdown.Toggle>
-                <Dropdown.Menu>
-                  <Dropdown.Item > <Link to="/user">Profile</Link></Dropdown.Item>
-                  <Dropdown.Item><Link to="/edituser">Edit</Link></Dropdown.Item>
-                  <Dropdown.Item onClick={this.handleLogOut}
-                      to="/login">Logout </Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
+        <nav className="navbar navbar-dark bg-dark">
+          <Link className="navbar-brand" to="/">My Store</Link>
+          <div className="navbar" id="navbarSupportedContent">
+            <ol className="nav justify-content-end mr-auto">
+              <li className="nav-item">
+                <Link className="nav-link" to="/login">Login <span className="sr-only">(current)</span></Link>
+              </li>
+              <li className="nav-item">
+                <Link className="nav-link" to="/registration">Register</Link>
+              </li>
             </ol>
           </div>
         </nav>

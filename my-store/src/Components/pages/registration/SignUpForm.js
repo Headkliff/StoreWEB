@@ -38,12 +38,6 @@ class SignUpForm extends Component {
     });
   };
 
-  handleValidation = () => {
-    if (this.password !== this.confirmPassword) {
-      errorToast("Passwords don't match");
-    }
-  };
-
   handleClose = () => {
     this.setState({ Confirm: false });
   };
@@ -53,7 +47,6 @@ class SignUpForm extends Component {
   };
 
   handleSubmit = e => {
-    e.preventDefaulf()
     const { password, confirmPassword } = this.state;
     if (password !== confirmPassword) {
       errorToast("Passwords don't match");
@@ -92,9 +85,9 @@ class SignUpForm extends Component {
             store={ToastsStore}
             position={ToastsContainerPosition.TOP_RIGHT}
           />
-          <div className="jumbotron jumbotron-fluid">
+          <div className='form-group'>
             <form onSubmit={this.shouldComponentUpdate}>
-              <div className="form-row">
+              <div className="input-group flex-nowrap">
                 <div className="col-md-4 mb-3">
                   <label htmlFor="nickname">Nickname</label>
                   <input
@@ -127,7 +120,7 @@ class SignUpForm extends Component {
                   />
                 </div>
               </div>
-              <div className="form-row">
+              <div className="input-group flex-nowrap">
                 <div className="col-md-4 mb-3">
                   <label htmlFor="password">Password</label>
                   <input
@@ -159,7 +152,7 @@ class SignUpForm extends Component {
                   />
                 </div>{" "}
               </div>
-              <div className="form-row">
+              <div className="input-group flex-nowrap">
                 <div className="col-md-6 mb-3">
                   <label htmlFor="firstName">First Name</label>
                   <input
@@ -193,22 +186,16 @@ class SignUpForm extends Component {
 
               <div className="FormField">
                 <div>
-                  <ul className="nav justify-content-end">
-                    <li>
-                      <button
-                        type="submit"
-                        className="btn btn-primary"
-                        onClick={() => this.showConfirmModal()}
-                      >
-                        Sign Up
+                  <button
+                    type="button"
+                    className="btn btn-primary"
+                    onClick={() => this.showConfirmModal()}
+                  >
+                    Sign Up
                       </button>
-                    </li>
-                    <li>
-                      <NavLink to="/login" className="Link" align="right">
-                        I'm already member
+                  <NavLink to="/login" className="Link" align="right">
+                    I'm already member
                       </NavLink>
-                    </li>
-                  </ul>
                 </div>
               </div>
             </form>

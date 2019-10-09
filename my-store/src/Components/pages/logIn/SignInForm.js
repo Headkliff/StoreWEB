@@ -3,7 +3,7 @@ import { NavLink } from "react-router-dom";
 import { connect } from "react-redux";
 import axios from "axios";
 import "./login.css";
-import { errorToast } from "../../../toasts/toast";
+import { errorToast } from "../../toasts/toast";
 import { ToastsContainer, ToastsStore } from "react-toasts";
 import { login } from "../../../Actions/userActionCreaters";
 import { compose } from "redux";
@@ -56,60 +56,25 @@ class SignInForm extends Component {
       <div>
         <ToastsContainer store={ToastsStore} />
         <div className="container">
-          <div className="jumbotron jumbotron-fluid">
-            <form onSubmit={this.handleSubmit}>
+          <form onSubmit={this.handleSubmit}>
+            <div class="input-group mb-3">
+              <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1" onChange={this.handleChange} />
+            </div>
+
+            <div class="input-group mb-3">
+              <input type="password" class="form-control" placeholder="Password" aria-label="Recipient's username" aria-describedby="basic-addon2" onChange={this.handleChange}/>
+            </div>
+            <div className="FormField">
               <div>
-                <div className="form-group">
-                  <label className="exampleInputEmail1" htmlFor="nickname">
-                    Nickname
-                  </label>
-                  <input
-                    type="text"
-                    aria-describedby="emailHelp"
-                    id="nickname"
-                    required
-                    maxLength="16"
-                    className="form-control"
-                    placeholder="Enter your nickname"
-                    name="nickname"
-                    value={this.state.nickname}
-                    onChange={this.handleChange}
-                  />
-                </div>
-                <div className="form-group">
-                  <label className="exampleInputPassword1">Password</label>
-                  <input
-                    type="password"
-                    className="form-control"
-                    id="password"
-                    required
-                    minLength="8"
-                    maxLength="16"
-                    placeholder="Enter your password"
-                    name="password"
-                    value={this.state.password}
-                    onChange={this.handleChange}
-                  />
-                </div>
-                <div className="FormField">
-                  <div>
-                    <ul className="nav justify-content-end">
-                      <li>
-                        <button type="submit" className="btn btn-primary">
-                          Sign In
+                <button type="submit" className="btn btn-primary" >
+                  Sign In
                         </button>
-                      </li>
-                      <li>
-                        <NavLink to="/registration" className="Link">
-                          Create an account
+                <NavLink to="/registration" className="Link">
+                  Create an account
                         </NavLink>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
               </div>
-            </form>
-          </div>
+            </div>
+          </form>
         </div>
       </div>
     );
