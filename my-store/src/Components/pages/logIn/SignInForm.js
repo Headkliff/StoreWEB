@@ -12,17 +12,19 @@ import {
 import { login } from "../../../Actions/userActionCreaters";
 import { compose } from "redux";
 
+
 class SignInForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
       nickname: "",
       password: "",
-      showError: false
+      errors: {}
     };
   }
 
   handleChange = e => {
+    e.preventDefault();
     let target = e.target;
     let value = target.type === "checkbox" ? target.checked : target.value;
     let name = target.name;
@@ -65,24 +67,29 @@ class SignInForm extends Component {
           <form onSubmit={this.handleSubmit}>
             <div className="input-group mb-3">
               <input
+                required
+                minLength="5"
                 type="text"
-                className="form-control"
+                className="form-control "
                 placeholder="Username"
-                aria-label="Username"
                 aria-describedby="basic-addon1"
                 name="nickname"
+                value={this.state.nickname}
                 onChange={this.handleChange}
               />
             </div>
 
-            <div class="input-group mb-3">
+            <div className="input-group mb-3">
               <input
                 type="password"
-                className="form-control"
+                className={"form-control "}
+                required
+                minLength="8"
+                formNoValidate
                 placeholder="Password"
-                aria-label="Recipient's username"
                 aria-describedby="basic-addon2"
                 name="password"
+                value={this.state.password}
                 onChange={this.handleChange}
               />
             </div>

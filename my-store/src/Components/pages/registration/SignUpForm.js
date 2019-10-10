@@ -11,23 +11,8 @@ import {
   ToastsContainerPosition
 } from "react-toasts";
 import { errorToast } from "../../toasts/toast";
-import ModalConfirm from "../../Modal/ModalConfirm";
 
-const formValid = ({ formErrors, ...rest }) => {
-  let valid = true;
 
-  Object.values(formErrors).forEach(val => val.length > 0 && (valid = false));
-
-  Object.values(rest).forEach(val => {
-    val === null && (valid = false);
-  });
-
-  return valid;
-};
-
-const emailRegex = RegExp(
-  /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
-);
 
 class SignUpForm extends Component {
   constructor(props) {
@@ -40,14 +25,6 @@ class SignUpForm extends Component {
       confirmPassword: "",
       firstName: "",
       secondName: "",
-      formErrors: {
-        nickname: "",
-        email: "",
-        password: "",
-        confirmPassword: "",
-        firstName: "",
-        secondName: ""
-      }
     };
   }
 
@@ -56,46 +33,15 @@ class SignUpForm extends Component {
     let target = e.target;
     let value = target.type === "checkbox" ? target.checked : target.value;
     let name = target.name;
-    let formErrors = this.state.formErrors;
 
-    switch (name) {
-      case "nickname":
-        formErrors.nickname =
-          value.length < 4 ? "minimum 4 characaters required" : "";
-        break;
-      case "firstName":
-        formErrors.firstName =
-          value.length < 3 ? "minimum 3 characaters required" : "";
-        break;
-      case "lastName":
-        formErrors.lastName =
-          value.length < 3 ? "minimum 3 characaters required" : "";
-        break;
-      case "email":
-        formErrors.email = emailRegex.test(value)
-          ? ""
-          : "invalid email address";
-        break;
-      case "password":
-        formErrors.password =
-          value.length < 8 ? "minimum 8 characaters required" : "";
-        break;
-      case "confirmPassword":
-        formErrors.confirmPassword =
-          value.length < 8 ? "minimum 8 characaters required" : "";
-        break;
-      default:
-        break;
-    }
-
-    this.setState({
-      [name]: value
-    });
+    this.setState({ [name]: value });
   };
 
   handleSubmit = e => {
     e.preventDefault();
-    if (formValid(this.state) && (this.state.password === this.state.confirmPassword)) {
+    if (
+      this.state.password === this.state.confirmPassword
+    ) {
       const user = {
         nickname: this.state.nickname,
         password: this.state.password,
@@ -115,47 +61,40 @@ class SignUpForm extends Component {
           errorToast("Something went wrong");
         });
     } else {
-      errorToast("Check your data");
+      errorToast("Passwords dosn't match!");
     }
   };
 
   render() {
-    const { formErrors } = this.state;
     return (
       <>
-        <ModalConfirm
-          text="Are you sure of the data entered?"
-          submit={this.handleSubmit}
+        <ToastsContainer
+          store={ToastsStore}
+          position={ToastsContainerPosition.TOP_RIGHT}
         />
         <div className="container">
-          <ToastsContainer
-            store={ToastsStore}
-            position={ToastsContainerPosition.TOP_RIGHT}
-          />
-          <div className="form-group">
-            <form onSubmit={this.handleSubmit}>
+          <form onSubmit={this.handleSubmit}>
+            <div className="form-group">
               <div className="row">
                 <div className="col-4 form-group">
                   <label htmlFor="nickname">Nickname</label>
-                  <input
-                    type="text"
-                    className={
-                      "form-control " +
-                      (formErrors.nickname.length > 0 ? "is-invalid" : null)
-                    }
-                    id="nickname"
-                    required
-                    placeholder="Enter your nickname"
-                    name="nickname"
-                    noValidate
-                    value={this.state.nickname}
-                    onChange={this.handleChange}
-                  />
-                  {formErrors.nickname.length > 0 && (
-                    <span className="invalid-feedback">
-                      {formErrors.nickname}
-                    </span>
-                  )}
+                  <div className="input-group mb-3">
+                    <input
+                      type="text"
+                      className={
+                        "form-control " 
+                        
+                      }
+                      id="nickname"
+                      required
+                      minLength='5'
+                      placeholder="Enter your nickname"
+                      name="nickname"
+                      formNoValidate
+                      value={this.state.nickname}
+                      onChange={this.handleChange}
+                    />
+                  </div>
                 </div>
 
                 <div className="col-8 form-group">
@@ -168,17 +107,13 @@ class SignUpForm extends Component {
                     name="email"
                     required
                     className={
-                      "form-control " +
-                      (formErrors.email.length > 0 ? "is-invalid" : null)
+                      "form-control " 
                     }
+                    formNoValidate
                     placeholder="Enter your email"
-                    noValidate
                     value={this.state.email}
                     onChange={this.handleChange}
                   />
-                  {formErrors.email.length > 0 && (
-                    <span className="invalid-feedback">{formErrors.email}</span>
-                  )}
                 </div>
               </div>
               <div className="row ">
@@ -188,21 +123,17 @@ class SignUpForm extends Component {
                     type="password"
                     id="password"
                     required
-                    minLength="8"
-                    maxLength="16"
+                    minLength='8'
                     className={
-                      "form-control " +
-                      (formErrors.password.length > 0 ? "is-invalid" : null)
+                      "form-control " 
                     }
                     placeholder="Enter your password"
                     name="password"
-                    noValidate
+                    formNoValidate
                     value={this.state.password}
                     onChange={this.handleChange}
                   />
-                  {formErrors.password.length > 0 && (
-                    <span className="errorMessage">{formErrors.password}</span>
-                  )}
+                  
                 </div>
                 <div className="col-6 form-group">
                   <label htmlFor="confirmPassword">Confirm your password</label>
@@ -210,26 +141,17 @@ class SignUpForm extends Component {
                     type="password"
                     id="confirmPassword"
                     required
-                    minLength="8"
-                    maxLength="16"
+                    minLength='8'
                     className={
-                      "form-control " +
-                      (formErrors.confirmPassword.length > 0
-                        ? "is-invalid"
-                        : null)
+                      "form-control " 
                     }
                     placeholder="Confirm your password"
                     name="confirmPassword"
-                    noValidate
+                    formNoValidate
                     value={this.state.confirmPassword}
                     onChange={this.handleChange}
                   />
-                  {formErrors.confirmPassword.length > 0 && (
-                    <span className="errorMessage">
-                      {formErrors.confirmPassword}
-                    </span>
-                  )}
-                </div>{" "}
+                </div>
               </div>
               <div className="row">
                 <div className="col-6 form-group">
@@ -237,51 +159,40 @@ class SignUpForm extends Component {
                   <input
                     type="text"
                     id="firstName"
-                    maxLength="25"
                     className={
-                      "form-control " +
-                      (formErrors.firstName.length > 0 ? "is-invalid" : null)
+                      "form-control " 
                     }
                     placeholder="Enter your First Name"
                     name="firstName"
-                    noValidate
-                    value={this.state.firstName}
+                    formNoValidate
                     onChange={this.handleChange}
+                    value={this.state.firstName}
                     required
+                    minLength='5'
                   />
-                  {formErrors.firstName.length > 0 && (
-                    <span className="errorMessage">{formErrors.firstName}</span>
-                  )}
+                  
                 </div>
-
                 <div className="col-6 form-group">
                   <label htmlFor="secondName">Second Name</label>
                   <input
                     type="text"
                     id="secondName"
-                    maxLength="25"
                     className={
-                      "form-control " +
-                      (formErrors.secondName.length > 0 ? "is-invalid" : null)
+                      "form-control "
                     }
                     placeholder="Enter your Second Name"
                     name="secondName"
-                    noValidate
+                    formNoValidate
                     value={this.state.secondName}
                     onChange={this.handleChange}
                     required
+                    minLength='5'
                   />
                 </div>
               </div>
-
               <div>
                 <div>
-                  <button
-                    type="button"
-                    className="btn btn-primary"
-                    data-toggle="modal"
-                    data-target="#submitModal"
-                  >
+                  <button type="submit" className="btn btn-primary">
                     Sign Up
                   </button>
                   <NavLink to="/login" className="Link ml-2" align="right">
@@ -289,8 +200,8 @@ class SignUpForm extends Component {
                   </NavLink>
                 </div>
               </div>
-            </form>
-          </div>
+            </div>
+          </form>
         </div>
       </>
     );
