@@ -3,44 +3,43 @@ import { NavLink } from "react-router-dom";
 import { connect } from "react-redux";
 import axios from "axios";
 import "./login.css";
-import { errorToast } from "../../toasts/toast";
+import { errorToast } from "../../Components/Toasts/Toast";
 import {
   ToastsContainer,
   ToastsStore,
   ToastsContainerPosition
 } from "react-toasts";
-import { login } from "../../../Actions/userActionCreaters";
+import { login } from "../../Actions/userActionCreaters";
 import { compose } from "redux";
-import * as bootstrapValidate from "bootstrap-validate";
-window.bootstrapValidate = bootstrapValidate;
 
 class SignInForm extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      nickname: "",
-      password: "",
-      passwordCorrect:false,
-      nicknameCorrect:false
-    };
-  }
+  state = {
+    nickname: "",
+    password: "",
+    passwordCorrect: false,
+    nicknameCorrect: false
+  };
 
   handleChange = e => {
     e.preventDefault();
-    let target = e.target;
-    let value = target.type === "checkbox" ? target.checked : target.value;
-    let name = target.name;
+    const target = e.target;
+    const value = target.type === "checkbox" ? target.checked : target.value;
+    const name = target.name;
 
-    bootstrapValidate(
-      "#nickname",
-      "min:5:Your name must  be longer than 5 characters|required|alphanum"
-    );
-    bootstrapValidate('#password', "min:5:Your name must  be longer than 5 characters|required", function(isValid) {
-      if (isValid) {
-        this.setState({passwordCorrect:true})
-      }else{
-        this.setState({passwordCorrect:false})
-      }})
+    if (name === "nickname") {
+      if (target.value.length > 4) {
+        this.setState({ nicknameCorrect: true });
+      } else {
+        this.setState({ nicknameCorrect: false });
+      }
+    }
+    if (name === "password") {
+      if (target.value.length > 7) {
+        this.setState({ passwordCorrect: true });
+      } else {
+        this.setState({ passwordCorrect: false });
+      }
+    }
 
     this.setState({
       [name]: value
@@ -53,25 +52,21 @@ class SignInForm extends Component {
       nickname: this.state.nickname,
       password: this.state.password
     };
-    console.log("start");
-    if(this.state.passwordCorrect && this.state.nicknameCorrect){
-        axios
-          .post("https://localhost:44326/api/Login/login", user)
-          .then(res => {
-            localStorage.setItem("token", res.data);
-            localStorage.setItem("nickname", this.state.nickname);
-            this.setState({ showError: false });
-            this.props.userlogin(this.state.nickname);
-            this.props.history.push("/");
-          })
-          .catch(error => {
-            this.setState({ showError: true });
-            errorToast("Check your Login or (and) Password");
-          });
-      } else {
-        console.log("false");
-        errorToast("Fill all inputs");
-      }
+    if (this.state.passwordCorrect && this.state.nicknameCorrect) {
+      axios
+        .post("https://localhost:44326/api/Login/login", user)
+        .then(res => {
+          localStorage.setItem("token", res.data);
+          localStorage.setItem("nickname", this.state.nickname);
+          this.props.userlogin(this.state.nickname);
+          this.props.history.push("/");
+        })
+        .catch(error => {
+          errorToast("Check your Login or (and) Password");
+        });
+    } else {
+      errorToast("Fill all inputs");
+    }
   };
 
   render() {
@@ -86,13 +81,14 @@ class SignInForm extends Component {
             <div className="input-group mb-3">
               <input
                 type="text"
-                // required
-                // minLength='5'
                 className="form-control "
                 placeholder="Username"
                 aria-describedby="basic-addon1"
                 id="nickname"
                 name="nickname"
+                formNoValidate
+                required
+                minLength="5"
                 value={this.state.nickname}
                 onChange={this.handleChange}
               />
@@ -101,13 +97,13 @@ class SignInForm extends Component {
             <div className="input-group mb-3">
               <input
                 type="password"
-                className={"form-control "}
-                formNoValidate
-                // required
-                // minLength="8"
+                className="form-control "
                 placeholder="Password"
                 aria-describedby="basic-addon2"
                 name="password"
+                formNoValidate
+                required
+                minLength="8"
                 id="password"
                 value={this.state.password}
                 onChange={this.handleChange}
@@ -120,7 +116,7 @@ class SignInForm extends Component {
                   className="btn btn-primary"
                   onClick={this.handleSubmit}
                 >
-                  Sign In
+                  Login
                 </button>
                 <NavLink to="/registration" className="Link ml-2">
                   Create an account

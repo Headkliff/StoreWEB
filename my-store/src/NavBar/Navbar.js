@@ -2,13 +2,13 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { compose } from "redux";
-import { logout } from "../../Actions/userActionCreaters";
+import { logout } from "../Actions/userActionCreaters";
+
 class Navibar extends React.Component {
   handleLogOut = e => {
     e.preventDefault();
     this.props.userLogout();
     localStorage.clear();
-    // this.props.history.push("/login");
   };
 
   navigation() {
@@ -34,14 +34,14 @@ class Navibar extends React.Component {
           </div>
         </nav>
       );
-    } else {
+    }
       return (
         <nav className="navbar navbar-dark bg-dark">
           <Link className="navbar-brand" to="/">
             My Store
           </Link>
           <div className="navbar" id="navbarSupportedContent">
-            <div className="btn-group">
+            <div className="btn-group dropleft">
               <button
                 type="button"
                 className="btn btn-danger dropdown-toggle"
@@ -58,6 +58,12 @@ class Navibar extends React.Component {
                 <Link className="dropdown-item" to="/user/edit">
                   Edit
                 </Link>
+                <Link className="dropdown-item" to="/user/users">
+                  Users List
+                </Link>
+                <Link className="dropdown-item" to="/items">
+                  Items List
+                </Link>
                 <div className="dropdown-divider"></div>
                 <button className="dropdown-item" onClick={this.handleLogOut}>
                   logout
@@ -67,7 +73,6 @@ class Navibar extends React.Component {
           </div>
         </nav>
       );
-    }
   }
   render() {
     return <div>{this.navigation()}</div>;

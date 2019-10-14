@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
 import axios from "axios";
 import "./register.css";
-import { login } from "../../../Actions/userActionCreaters";
+import { login } from "../../Actions/userActionCreaters";
 import { compose } from "redux";
 import { connect } from "react-redux";
 import {
@@ -10,15 +10,12 @@ import {
   ToastsStore,
   ToastsContainerPosition
 } from "react-toasts";
-import { errorToast } from "../../toasts/toast";
+import { errorToast } from "../../Components/Toasts/Toast";
 
 
 
 class SignUpForm extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
+    state = {
       nickname: "",
       email: "",
       password: "",
@@ -26,7 +23,6 @@ class SignUpForm extends Component {
       firstName: "",
       secondName: "",
     };
-  }
 
   handleChange = e => {
     e.preventDefault();
@@ -54,6 +50,7 @@ class SignUpForm extends Component {
         .post("https://localhost:44326/api/login/registration", user)
         .then(res => {
           localStorage.setItem("token", res.data);
+          localStorage.setItem("nickname", this.state.nickname)
           this.props.userlogin(this.state.nickname);
           this.props.history.push("/");
         })
@@ -168,7 +165,7 @@ class SignUpForm extends Component {
                     onChange={this.handleChange}
                     value={this.state.firstName}
                     required
-                    minLength='5'
+                    minLength='4'
                   />
                   
                 </div>
@@ -186,7 +183,7 @@ class SignUpForm extends Component {
                     value={this.state.secondName}
                     onChange={this.handleChange}
                     required
-                    minLength='5'
+                    minLength='4'
                   />
                 </div>
               </div>

@@ -42,8 +42,7 @@ class User extends React.Component {
       return (
         <div className="center">
           <div className="container">
-            <div className="cart">
-            </div>
+            <div className="cart"></div>
             <div className="cart-body">
               <div className="box box-info">
                 <div className="d-flex align-items-center">
@@ -59,36 +58,46 @@ class User extends React.Component {
           </div>
         </div>
       );
-    else {
+    
       if (this.props.isAuthorized) {
         info = (
-          <div className="center">
-            <div className="container">
-              <div className="cart">
-
-                <div className="cart-body">
-                  <div className="box box-info">
-                    <div className="col-sm-6">
-                      <span>
-                        <h4>{this.state.nickname}</h4>
-                      </span>
+          <>
+            <div className="center">
+              <div className="container">
+                <div className="cart">
+                  <div className="cart-body">
+                    <div className="box box-info">
+                      <div className="col-sm-6">
+                        <span>
+                          <h4>{this.state.nickname}</h4>
+                        </span>
+                      </div>
+                      <div className="clearfix"></div>
+                      <hr></hr>
+                    </div>
+                    <div className="col-sm-5 col-xs-6 tital ">
+                      <strong>First Name:</strong>
+                      {this.state.firstName}
                     </div>
                     <div className="clearfix"></div>
-                    <hr></hr>
+                    <div className="bot-border"></div>
+                    <div className="col-sm-5 col-xs-6 tital ">
+                      <strong>Last Name:</strong>
+                      {this.state.secondName}
+                    </div>
+                    <div className="clearfix"></div>
+                    <div className="bot-border"></div>
+                    <div className="col-sm-5 col-xs-6 tital ">
+                      <strong>Email:</strong>
+                      {this.state.email}
+                    </div>
+                    <div className="clearfix"></div>
+                    <div className="bot-border"></div>
                   </div>
-                  <div className="col-sm-5 col-xs-6 tital "><strong>First Name:</strong>{this.state.firstName}</div>
-                  <div className="clearfix"></div>
-                  <div className="bot-border"></div>
-                  <div className="col-sm-5 col-xs-6 tital "><strong>Last Name:</strong>{this.state.secondName}</div>
-                  <div className="clearfix"></div>
-                  <div className="bot-border"></div>
-                  <div className="col-sm-5 col-xs-6 tital "><strong>Email:</strong>{this.state.email}</div>
-                  <div className="clearfix"></div>
-                  <div className="bot-border"></div>
                 </div>
               </div>
             </div>
-          </div>
+          </>
         );
       } else {
         info = (
@@ -111,7 +120,7 @@ class User extends React.Component {
       return <div>{info}</div>;
     }
   }
-}
+
 
 const mapStateToProps = state => ({
   nickname: state.user.nickname,

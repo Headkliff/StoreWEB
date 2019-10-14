@@ -1,11 +1,12 @@
 import React from "react";
 import { Route, BrowserRouter as Router, Switch } from "react-router-dom";
-import SignInForm from "../Components/pages/logIn/SignInForm";
-import SignUpForm from "../Components/pages/registration/SignUpForm";
-import Notfound from "../Components/pages/404/notfound";
-import Navibar from "../Components/NavBar/Navbar";
-import User from "../Components/pages/user/user";
-import EditUser from "../Components/pages/user/editinfo/editUser";
+import SignInForm from "../Pages/LogIn/SignInForm";
+import SignUpForm from "../Pages/Registration/SignUpForm";
+import Notfound from "../Pages/404/Notfound";
+import Navibar from "../NavBar/Navbar";
+import User from "../Pages/User/User";
+import EditUser from "../Pages/User/EditInfo/EditUser";
+import UserList from "../Pages/UserList/UserList"
 import App from "../App";
 
 const Routes = () => {
@@ -18,6 +19,7 @@ const Routes = () => {
         <Route path="/registration" component={SignUpForm} />
         <Route exact path="/user" component={User} />
         <Route path="/user/edit" component={EditUser} />
+        <Route path="/user/users" component={UserList} />
         <Route path="*" component={Notfound} />
       </Switch>
     </Router>
