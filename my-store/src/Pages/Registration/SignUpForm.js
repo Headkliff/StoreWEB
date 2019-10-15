@@ -67,7 +67,7 @@ class SignUpForm extends Component {
       <>
         <ToastsContainer
           store={ToastsStore}
-          position={ToastsContainerPosition.TOP_RIGHT}
+          position={ToastsContainerPosition.TOP_LEFT}
         />
         <div className="container">
           <form onSubmit={this.handleSubmit}>
@@ -84,7 +84,7 @@ class SignUpForm extends Component {
                       }
                       id="nickname"
                       required
-                      minLength='5'
+                      minLength='4'
                       placeholder="Enter your nickname"
                       name="nickname"
                       formNoValidate

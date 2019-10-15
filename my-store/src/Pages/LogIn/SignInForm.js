@@ -74,7 +74,7 @@ class SignInForm extends Component {
       <>
         <ToastsContainer
           store={ToastsStore}
-          position={ToastsContainerPosition.TOP_RIGHT}
+          position={ToastsContainerPosition.TOP_LEFT}
         />
         <div className="container">
           <form onSubmit={this.handleSubmit}>
@@ -88,7 +88,7 @@ class SignInForm extends Component {
                 name="nickname"
                 formNoValidate
                 required
-                minLength="5"
+                minLength="4"
                 value={this.state.nickname}
                 onChange={this.handleChange}
               />

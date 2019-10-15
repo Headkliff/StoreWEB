@@ -6,6 +6,9 @@ import {
   ToastsContainerPosition
 } from "react-toasts";
 import { errorToast, successToast } from "../../Components/Toasts/Toast";
+import { connect } from "react-redux";
+import { compose } from "redux";
+import UnAuthorize from "../../Components/UnAuthorize/UnAuthorize";
 
 class UserList extends React.Component {
   constructor(props) {
@@ -36,10 +39,26 @@ class UserList extends React.Component {
     axios
       .delete("https://localhost:44326/api/User/delete", {
         headers: { Authorization: "Bearer " + localStorage.getItem("token") },
-        data: user.id
+        data: user
       })
       .then(res => {
         successToast("User delete!");
+        this.getUsers();
+      })
+      .catch(error => {
+        errorToast("Somethin went wrong!");
+      });
+  };
+
+  softDeleteUser = user => {
+    axios
+      .delete("https://localhost:44326/api/User/softdelete", {
+        headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+        data: user
+      })
+      .then(res => {
+        successToast("User soft delete!");
+        this.getUsers();
       })
       .catch(error => {
         errorToast("Somethin went wrong!");
@@ -50,13 +69,17 @@ class UserList extends React.Component {
     return this.state.users.map(user => {
       const { id, nickname, email, firstName, secondName } = user;
       return (
-        <tr key={nickname}>
+        <tr key={id}>
           <td>{nickname}</td>
           <td>{email}</td>
           <td>{firstName}</td>
           <td>{secondName}</td>
           <td>
-            <button type="button" className="btn btn-warning btn-sm">
+            <button
+              type="button"
+              className="btn btn-warning btn-sm"
+              onClick={() => this.softDeleteUser(user)}
+            >
               Soft Delete
             </button>
           </td>
@@ -74,14 +97,10 @@ class UserList extends React.Component {
     });
   }
 
-  render() {
-    return (
-      <>
-        <ToastsContainer
-          store={ToastsStore}
-          position={ToastsContainerPosition.TOP_RIGHT}
-        />
-        <div className="container">
+  pageRender() {
+    if (this.props.isAuthorized) {
+      return (
+        <>
           <h1 id="title" align="center">
             React Dynamic Table
           </h1>
@@ -98,9 +117,32 @@ class UserList extends React.Component {
             </thead>
             <tbody>{this.renderTableData()}</tbody>
           </table>
+        </>
+      );
+    } else {
+      return <UnAuthorize />;
+    }
+  }
+
+  render() {
+    return (
+      <>
+        <ToastsContainer
+          store={ToastsStore}
+          position={ToastsContainerPosition.TOP_LEFT}
+        />
+
+        <div className="jumbotron jumbotron">
+          <div className="container">{this.pageRender()}</div>
         </div>
       </>
     );
   }
 }
-export default UserList;
+
+const mapStateToProps = state => ({
+  nickname: state.user.nickname,
+  isAuthorized: state.user.authorized
+});
+
+export default compose(connect(mapStateToProps)(UserList));

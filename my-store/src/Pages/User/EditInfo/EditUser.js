@@ -2,8 +2,8 @@ import React from "react";
 import axios from "axios";
 import { connect } from "react-redux";
 import { compose } from "redux";
-import { Link } from "react-router-dom";
 import { errorToast, successToast } from "../../../Components/Toasts/Toast";
+import UnAuthorize from "../../../Components/UnAuthorize/UnAuthorize";
 
 class EditUser extends React.Component {
   constructor(props) {
@@ -244,20 +244,7 @@ class EditUser extends React.Component {
       );
     } else {
       return (
-        <div className="jumbotron jumbotron">
-          <div className="container">
-            <div className="alert alert-danger" role="alert">
-              <span>You are not authorized </span>
-              <Link to="/login" className="alert-link">
-                Login
-              </Link>
-              <span> or </span>
-              <Link to="/registration" className="alert-link">
-                Register
-              </Link>
-            </div>
-          </div>
-        </div>
+        <UnAuthorize></UnAuthorize>
       );
     }
   }
