@@ -3,6 +3,7 @@ import axios from "axios";
 import { connect } from "react-redux";
 import { compose } from "redux";
 import UnAuthorize from "../../Components/UnAuthorize/UnAuthorize";
+import { errorToast } from "../../Components/Toasts/Toast";
 
 class User extends React.Component {
   constructor(props) {
@@ -32,6 +33,7 @@ class User extends React.Component {
         });
       })
       .catch(error => {
+        errorToast(error.response.data.message)
         this.setState({ loading: false });
       });
   }

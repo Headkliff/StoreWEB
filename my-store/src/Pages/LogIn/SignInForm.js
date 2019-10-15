@@ -27,7 +27,7 @@ class SignInForm extends Component {
     const name = target.name;
 
     if (name === "nickname") {
-      if (target.value.length > 4) {
+      if (target.value.length > 3) {
         this.setState({ nicknameCorrect: true });
       } else {
         this.setState({ nicknameCorrect: false });
@@ -62,7 +62,7 @@ class SignInForm extends Component {
           this.props.history.push("/");
         })
         .catch(error => {
-          errorToast("Check your Login or (and) Password");
+          errorToast(error.response.data.message);
         });
     } else {
       errorToast("Fill all inputs");

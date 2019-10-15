@@ -55,7 +55,7 @@ class SignUpForm extends Component {
           this.props.history.push("/");
         })
         .catch(error => {
-          errorToast("Something went wrong");
+          errorToast(error.response.data.message);
         });
     } else {
       errorToast("Passwords dosn't match!");

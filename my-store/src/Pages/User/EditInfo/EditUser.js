@@ -4,6 +4,11 @@ import { connect } from "react-redux";
 import { compose } from "redux";
 import { errorToast, successToast } from "../../../Components/Toasts/Toast";
 import UnAuthorize from "../../../Components/UnAuthorize/UnAuthorize";
+import {
+  ToastsContainer,
+  ToastsStore,
+  ToastsContainerPosition
+} from "react-toasts";
 
 class EditUser extends React.Component {
   constructor(props) {
@@ -43,30 +48,31 @@ class EditUser extends React.Component {
         headers: { Authorization: "Bearer " + localStorage.getItem("token") }
       })
       .then(res => {
-        localStorage.setItem("token", res.data);
-        this.props.history.push("/user");
+        successToast("New data set");
+        this.userData();
       })
       .catch(error => {
-        console.log(error);
+        errorToast(error.response.data.message);
       });
   };
 
   handleSubmitPass = e => {
     e.preventDefault();
     if (this.state.newPassword === this.state.confirmNewPassword) {
-      const data = {
+      const password = {
         password: this.state.password,
         newPassword: this.state.newPassword
       };
+      console.log(password);
       axios
-        .post("https://localhost:44326/api/User/changePass", data, {
+        .post("https://localhost:44326/api/User/changePass", password, {
           headers: { Authorization: "Bearer " + localStorage.getItem("token") }
         })
         .then(res => {
           successToast("New password set");
         })
         .catch(error => {
-          errorToast("Wrong password");
+          errorToast(error.response.data.message);
         });
     } else {
       errorToast("Passwords must match");
@@ -243,14 +249,20 @@ class EditUser extends React.Component {
         </div>
       );
     } else {
-      return (
-        <UnAuthorize></UnAuthorize>
-      );
+      return <UnAuthorize></UnAuthorize>;
     }
   }
 
   render() {
-    return <div>{this.userEdit()}</div>;
+    return (
+      <div>
+        <ToastsContainer
+          store={ToastsStore}
+          position={ToastsContainerPosition.TOP_LEFT}
+        />
+        {this.userEdit()}
+      </div>
+    );
   }
 }
 
