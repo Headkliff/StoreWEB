@@ -56,9 +56,10 @@ class SignInForm extends Component {
       axios
         .post("https://localhost:44326/api/Login/login", user)
         .then(res => {
-          localStorage.setItem("token", res.data);
-          localStorage.setItem("nickname", this.state.nickname);
-          this.props.userlogin(this.state.nickname);
+          localStorage.setItem("token", res.data.token);
+          localStorage.setItem("nickname", this.state.nickname)
+          localStorage.setItem("role", res.data.user.role)
+          this.props.userlogin(this.state.nickname, res.data.user.role);
           this.props.history.push("/");
         })
         .catch(error => {
@@ -131,8 +132,8 @@ class SignInForm extends Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-  userlogin: nickname => {
-    dispatch(login(nickname));
+  userlogin: (nickname,role) => {
+    dispatch(login(nickname,role));
   }
 });
 

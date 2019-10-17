@@ -35,44 +35,49 @@ class Navibar extends React.Component {
         </nav>
       );
     }
-      return (
-        <nav className="navbar navbar-dark bg-dark">
-          <Link className="navbar-brand" to="/">
-            My Store
-          </Link>
-          <div className="navbar" id="navbarSupportedContent">
-            <div className="btn-group dropleft">
-              <button
-                type="button"
-                className="btn btn-danger dropdown-toggle"
-                data-toggle="dropdown"
-                aria-haspopup="true"
-                aria-expanded="false"
-              >
-                {this.props.nickname}
+    
+    return (
+      <nav className="navbar navbar-dark bg-dark">
+        <Link className="navbar-brand" to="/">
+          My Store
+        </Link>
+        <div className="navbar" id="navbarSupportedContent">
+          <div className="btn-group dropleft">
+            <button
+              type="button"
+              className="btn btn-danger dropdown-toggle"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+            >
+              {this.props.nickname}
+            </button>
+            <div className="dropdown-menu">
+              <Link className="dropdown-item" to="/user">
+                Profile
+              </Link>
+              <Link className="dropdown-item" to="/user/edit">
+                Edit
+              </Link>
+              {this.props.role === "Admin" && (
+                <>
+                  <Link className="dropdown-item" to="/user/users">
+                    Users List
+                  </Link>
+                  <Link className="dropdown-item" to="/items">
+                    Items List
+                  </Link>
+                </>
+              )}
+              <div className="dropdown-divider"></div>
+              <button className="dropdown-item" onClick={this.handleLogOut}>
+                logout
               </button>
-              <div className="dropdown-menu">
-                <Link className="dropdown-item" to="/user">
-                  Profile
-                </Link>
-                <Link className="dropdown-item" to="/user/edit">
-                  Edit
-                </Link>
-                <Link className="dropdown-item" to="/user/users">
-                  Users List
-                </Link>
-                <Link className="dropdown-item" to="/items">
-                  Items List
-                </Link>
-                <div className="dropdown-divider"></div>
-                <button className="dropdown-item" onClick={this.handleLogOut}>
-                  logout
-                </button>
-              </div>
             </div>
           </div>
-        </nav>
-      );
+        </div>
+      </nav>
+    );
   }
   render() {
     return <div>{this.navigation()}</div>;
@@ -87,7 +92,8 @@ const mapDispatchToProps = dispatch => ({
 
 const mapStateToProps = state => ({
   nickname: state.user.nickname,
-  isAuthorized: state.user.authorized
+  isAuthorized: state.user.authorized,
+  role: state.user.role
 });
 
 export default compose(

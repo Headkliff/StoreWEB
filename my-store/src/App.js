@@ -1,22 +1,21 @@
 import React, { Component } from "react";
-
 import "./App.css";
+import Routes from "./Routing/Routes";
+import { createStore } from "redux";
+import { Provider } from "react-redux";
+import allReducers from "../src/Reducers/reducers";
 
+
+const store = createStore(allReducers, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
+
+const routing = Routes();
 class App extends Component {
   render() {
     return (
-      <div>
-        <div className="jumbotron jumbotron-fluid">
-          <div className="container" >
-            <h1 className="display-4">Welcome</h1>
-            <p className="lead">
-              You have come to the main page of the store.
-              <br />
-              In the future there will be more information. Have a nice day.
-            </p>
-          </div>
-        </div>
-      </div>
+      <Provider store={store}>
+        {routing}
+      </Provider>
+      
     );
   }
 }

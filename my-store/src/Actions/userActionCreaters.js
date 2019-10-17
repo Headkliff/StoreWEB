@@ -1,10 +1,11 @@
 export const LOGIN = "LOGIN";
 export const LOGOUT = "LOGOUT";
 
-export function login(nickname) {
+export function login(nickname ,role) {
   return {
     type: LOGIN,
-    nickname
+    nickname,
+    role
   };
 }
 

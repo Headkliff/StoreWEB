@@ -33,7 +33,7 @@ class User extends React.Component {
         });
       })
       .catch(error => {
-        errorToast(error.response.data.message)
+        errorToast(error.response.data.message);
         this.setState({ loading: false });
       });
   }
@@ -60,56 +60,53 @@ class User extends React.Component {
           </div>
         </div>
       );
-    
-      if (this.props.isAuthorized) {
-        info = (
-          <>
-            <div className="center">
-              <div className="container">
-                <div className="cart">
-                  <div className="cart-body">
-                    <div className="box box-info">
-                      <div className="col-sm-6">
-                        <span>
-                          <h4>{this.state.nickname}</h4>
-                        </span>
-                      </div>
-                      <div className="clearfix"></div>
-                      <hr></hr>
-                    </div>
-                    <div className="col-sm-5 col-xs-6 tital ">
-                      <strong>First Name:</strong>
-                      {this.state.firstName}
+
+    if (this.props.isAuthorized) {
+      info = (
+        <>
+          <div className="center">
+            <div className="container">
+              <div className="cart">
+                <div className="cart-body">
+                  <div className="box box-info">
+                    <div className="col-sm-6">
+                      <span>
+                        <h4>{this.state.nickname}</h4>
+                      </span>
                     </div>
                     <div className="clearfix"></div>
-                    <div className="bot-border"></div>
-                    <div className="col-sm-5 col-xs-6 tital ">
-                      <strong>Last Name:</strong>
-                      {this.state.secondName}
-                    </div>
-                    <div className="clearfix"></div>
-                    <div className="bot-border"></div>
-                    <div className="col-sm-5 col-xs-6 tital ">
-                      <strong>Email:</strong>
-                      {this.state.email}
-                    </div>
-                    <div className="clearfix"></div>
-                    <div className="bot-border"></div>
+                    <hr></hr>
                   </div>
+                  <div className="col-sm-5 col-xs-6 tital ">
+                    <strong>First Name:</strong>
+                    {this.state.firstName}
+                  </div>
+                  <div className="clearfix"></div>
+                  <div className="bot-border"></div>
+                  <div className="col-sm-5 col-xs-6 tital ">
+                    <strong>Last Name:</strong>
+                    {this.state.secondName}
+                  </div>
+                  <div className="clearfix"></div>
+                  <div className="bot-border"></div>
+                  <div className="col-sm-5 col-xs-6 tital ">
+                    <strong>Email:</strong>
+                    {this.state.email}
+                  </div>
+                  <div className="clearfix"></div>
+                  <div className="bot-border"></div>
                 </div>
               </div>
             </div>
-          </>
-        );
-      } else {
-        info = (
-         <UnAuthorize/>
-        );
-      }
-      return <div>{info}</div>;
+          </div>
+        </>
+      );
+    } else {
+      info = <UnAuthorize />;
     }
+    return <div>{info}</div>;
   }
-
+}
 
 const mapStateToProps = state => ({
   nickname: state.user.nickname,
