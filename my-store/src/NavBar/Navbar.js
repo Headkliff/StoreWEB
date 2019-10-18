@@ -61,7 +61,7 @@ class Navibar extends React.Component {
               </Link>
               {this.props.role === "Admin" && (
                 <>
-                  <Link className="dropdown-item" to="/user/users">
+                  <Link className="dropdown-item" to="/users">
                     Users List
                   </Link>
                   <Link className="dropdown-item" to="/items">
@@ -71,7 +71,7 @@ class Navibar extends React.Component {
               )}
               <div className="dropdown-divider"></div>
               <button className="dropdown-item" onClick={this.handleLogOut}>
-                logout
+                Logout
               </button>
             </div>
           </div>

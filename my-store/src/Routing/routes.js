@@ -10,6 +10,7 @@ import UserList from "../Pages/UserList/UserList"
 import Home from "../Pages/Home/Home";
 import Item from "../Components/Item/Item";
 import EditItem from "../Pages/EditItem/EditItem";
+import ItemList from "../Pages/ItemList/ItemList";
 
 const Routes = () => {
   return (
@@ -24,6 +25,7 @@ const Routes = () => {
         <Route path="/users" component={UserList} />
         <Route exact path = "/item/:id" component ={Item}/>
         <Route path = "/item/edit/:id" component ={EditItem}/>
+        <Route path="/items" component={ItemList} />
         <Route path="*" component={Notfound} />
       </Switch>
     </Router>

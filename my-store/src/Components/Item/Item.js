@@ -1,5 +1,7 @@
 import React from "react";
 import axios from "axios";
+import { connect } from "react-redux";
+import { compose } from "redux";
 import { Container, Row, Col, Jumbotron } from "react-bootstrap";
 import {
   ToastsContainer,
@@ -40,8 +42,8 @@ class Item extends React.Component {
       });
   }
 
-  edit(){
-    this.props.history.push("/item/edit/"+this.state.id);
+  edit() {
+    this.props.history.push("/item/edit/" + this.state.id);
   }
 
   render() {
@@ -78,9 +80,15 @@ class Item extends React.Component {
               </Col>
               <Row>
                 <Col sm={7}>
-                  <button type="button" className="btn btn-info" onClick={()=>this.edit()}>
-                    Edit
-                  </button>
+                  {this.props.role === "Admin" && (
+                    <button
+                      type="button"
+                      className="btn btn-info"
+                      onClick={() => this.edit()}
+                    >
+                      Edit
+                    </button>
+                  )}
                 </Col>
               </Row>
             </Row>
@@ -91,4 +99,10 @@ class Item extends React.Component {
   }
 }
 
-export default Item;
+const mapStateToProps = state => ({
+  nickname: state.user.nickname,
+  isAuthorized: state.user.authorized,
+  role: state.user.role
+});
+
+export default compose(connect(mapStateToProps)(Item));

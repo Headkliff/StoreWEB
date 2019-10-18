@@ -63,7 +63,6 @@ class EditUser extends React.Component {
         password: this.state.password,
         newPassword: this.state.newPassword
       };
-      console.log(password);
       axios
         .post("https://localhost:44326/api/User/changePass", password, {
           headers: { Authorization: "Bearer " + localStorage.getItem("token") }

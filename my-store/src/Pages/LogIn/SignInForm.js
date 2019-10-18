@@ -78,7 +78,7 @@ class SignInForm extends Component {
           position={ToastsContainerPosition.TOP_LEFT}
         />
         <div className="container">
-          <form onSubmit={this.handleSubmit}>
+          <form className="needs-validation" noValidate onSubmit={this.handleSubmit}>
             <div className="input-group mb-3">
               <input
                 type="text"

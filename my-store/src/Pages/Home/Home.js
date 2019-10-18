@@ -8,6 +8,7 @@ import {
   ToastsContainerPosition
 } from "react-toasts";
 import { errorToast } from "../../Components/Toasts/Toast";
+import "./Home.css"
 
 class Home extends React.Component {
   constructor(props) {
@@ -45,7 +46,7 @@ class Home extends React.Component {
           <div className="card border-dark mb-3">
             <div className="card-body">
               <img src="\Media\nonIMG.png" className="card-img-top" alt="..." />
-              <h5 className="card-title">{name}</h5>
+              <h5 className="card-text item-name">{name}</h5>
               <p className="card-text">{category}</p>
               <p className="card-text">{type}</p>
               <p className="card-text">{cost} $</p>

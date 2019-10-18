@@ -1,5 +1,6 @@
 import React from "react";
 import axios from "axios";
+import { Redirect } from "react-router";
 import {
   ToastsContainer,
   ToastsStore,
@@ -62,7 +63,7 @@ class UserList extends React.Component {
         errorToast(error.response.data.message);
       });
   };
-  unlockUser = user=>{
+  unlockUser = user => {
     axios
       .delete("https://localhost:44326/api/User/unlock", {
         headers: { Authorization: "Bearer " + localStorage.getItem("token") },
@@ -75,24 +76,28 @@ class UserList extends React.Component {
       .catch(error => {
         errorToast(error.response.data.message);
       });
-  }
-  blockButton(user){
+  };
+  blockButton(user) {
     if (user.isDeleted) {
-      return(<button
-      type="button"
-      className="btn btn-warning btn-sm"
-      onClick={() => this.unlockUser(user)}
-    >
-      Unlock
-    </button>)
-    } return(
+      return (
+        <button
+          type="button"
+          className="btn btn-warning btn-sm"
+          onClick={() => this.unlockUser(user)}
+        >
+          Unlock
+        </button>
+      );
+    }
+    return (
       <button
-      type="button"
-      className="btn btn-warning btn-sm"
-      onClick={() => this.blockUser(user)}
-    >
-      Block
-    </button>)
+        type="button"
+        className="btn btn-warning btn-sm"
+        onClick={() => this.blockUser(user)}
+      >
+        Block
+      </button>
+    );
   }
   renderTableData() {
     return this.state.users.map(user => {
@@ -104,9 +109,7 @@ class UserList extends React.Component {
           <td>{firstName}</td>
           <td>{secondName}</td>
           <td>{isDeleted && "Blocked"}</td>
-          <td>
-            {this.blockButton(user)}            
-          </td>
+          <td>{this.blockButton(user)}</td>
           <td>
             <button
               type="button"
@@ -148,7 +151,7 @@ class UserList extends React.Component {
     }
   }
   render() {
-    return (
+    return this.props.role === "Admin" ? (
       <>
         <ToastsContainer
           store={ToastsStore}
@@ -159,11 +162,14 @@ class UserList extends React.Component {
           <div className="container">{this.pageRender()}</div>
         </div>
       </>
+    ) : (
+      <Redirect to="/" />
     );
   }
 }
 const mapStateToProps = state => ({
   nickname: state.user.nickname,
-  isAuthorized: state.user.authorized
+  isAuthorized: state.user.authorized,
+  role: state.user.role
 });
 export default compose(connect(mapStateToProps)(UserList));

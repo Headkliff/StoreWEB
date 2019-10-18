@@ -1,12 +1,15 @@
 import React from "react";
+import {Redirect} from "react-router"
 import axios from "axios";
 import {
   ToastsContainer,
   ToastsStore,
   ToastsContainerPosition
 } from "react-toasts";
-import { errorToast,successToast } from "../../Components/Toasts/Toast";
+import { errorToast, successToast } from "../../Components/Toasts/Toast";
 import { Jumbotron, Container } from "react-bootstrap";
+import { connect } from "react-redux";
+import { compose } from "redux";
 
 class EditItem extends React.Component {
   constructor(props) {
@@ -38,6 +41,7 @@ class EditItem extends React.Component {
         this.setState({ loading: false });
       });
   }
+
   handleChange = e => {
     e.preventDefault();
     const target = e.target;
@@ -50,28 +54,29 @@ class EditItem extends React.Component {
   };
 
   handleSubmit = e => {
-    e.preventDefauld();
+    e.preventDefault();
     const newItemData = {
+      id: this.state.id,
       name: this.state.name,
       category: this.state.category,
       type: this.state.type,
       cost: this.state.cost
     };
     axios
-        .post("https://localhost:44326/api/item/editItem", newItemData, {
-          headers: { Authorization: "Bearer " + localStorage.getItem("token") }
-        })
-        .then(res => {
-          successToast("New data set");
-        })
-        .catch(error => {
-          errorToast(error.response.data.message);
-        });
-
+      .post("https://localhost:44326/api/Item/edit", newItemData, {
+        headers: { Authorization: "Bearer " + localStorage.getItem("token") }
+      })
+      .then(res => {
+        successToast("New data set");
+      })
+      .catch(error => {
+        errorToast(error.response.data.message);
+      });
   };
 
   render() {
     return (
+      (this.props.role === "Admin" ? (
       <>
         <ToastsContainer
           store={ToastsStore}
@@ -79,7 +84,7 @@ class EditItem extends React.Component {
         />
         <Jumbotron>
           <Container>
-            <form onSubmit={this.handleSubmit}>
+            <form className="needs-validation" noValidate onSubmit={this.handleSubmit}>
               <div>
                 <div className="form-group row">
                   <label
@@ -156,8 +161,13 @@ class EditItem extends React.Component {
           </Container>
         </Jumbotron>
       </>
-    );
+      ):<Redirect to="/"/>));
   }
 }
 
-export default EditItem;
+const mapStateToProps = state => ({
+  nickname: state.user.nickname,
+  isAuthorized: state.user.authorized,
+  role: state.user.role
+});
+export default compose(connect(mapStateToProps)(EditItem));
