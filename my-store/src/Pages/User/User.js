@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import { compose } from "redux";
 import UnAuthorize from "../../Components/UnAuthorize/UnAuthorize";
 import { errorToast } from "../../Components/Toasts/Toast";
+import Sidebar from "../../Components/Sidebar/Sidebar";
 
 class User extends React.Component {
   constructor(props) {
@@ -33,13 +34,48 @@ class User extends React.Component {
         });
       })
       .catch(error => {
-        errorToast(error.response.data.message);
+        errorToast("Somethin went wrong");
         this.setState({ loading: false });
       });
   }
 
+  userInfo() {
+    return (
+      <div className="cart">
+        <div className="cart-body">
+          <div className="box box-info">
+            <div className="col-sm-6">
+              <span>
+                <h4>{this.state.nickname}</h4>
+              </span>
+            </div>
+            <div className="clearfix"></div>
+            <hr></hr>
+          </div>
+          <div className="col-sm-5 col-xs-6 tital ">
+            <strong>First Name:</strong>
+            {this.state.firstName}
+          </div>
+          <div className="clearfix"></div>
+          <div className="bot-border"></div>
+          <div className="col-sm-5 col-xs-6 tital ">
+            <strong>Last Name:</strong>
+            {this.state.secondName}
+          </div>
+          <div className="clearfix"></div>
+          <div className="bot-border"></div>
+          <div className="col-sm-5 col-xs-6 tital ">
+            <strong>Email:</strong>
+            {this.state.email}
+          </div>
+          <div className="clearfix"></div>
+          <div className="bot-border"></div>
+        </div>
+      </div>
+    );
+  }
+
   render() {
-    var info;
     if (this.state.loading)
       return (
         <div className="center">
@@ -60,57 +96,25 @@ class User extends React.Component {
           </div>
         </div>
       );
-
     if (this.props.isAuthorized) {
-      info = (
+      return (
         <>
+          {this.props.role === "Admin" && <Sidebar />}
           <div className="center">
-            <div className="container">
-              <div className="cart">
-                <div className="cart-body">
-                  <div className="box box-info">
-                    <div className="col-sm-6">
-                      <span>
-                        <h4>{this.state.nickname}</h4>
-                      </span>
-                    </div>
-                    <div className="clearfix"></div>
-                    <hr></hr>
-                  </div>
-                  <div className="col-sm-5 col-xs-6 tital ">
-                    <strong>First Name:</strong>
-                    {this.state.firstName}
-                  </div>
-                  <div className="clearfix"></div>
-                  <div className="bot-border"></div>
-                  <div className="col-sm-5 col-xs-6 tital ">
-                    <strong>Last Name:</strong>
-                    {this.state.secondName}
-                  </div>
-                  <div className="clearfix"></div>
-                  <div className="bot-border"></div>
-                  <div className="col-sm-5 col-xs-6 tital ">
-                    <strong>Email:</strong>
-                    {this.state.email}
-                  </div>
-                  <div className="clearfix"></div>
-                  <div className="bot-border"></div>
-                </div>
-              </div>
-            </div>
+            <div className="container">{this.userInfo()}</div>
           </div>
         </>
       );
     } else {
-      info = <UnAuthorize />;
+      return <UnAuthorize />;
     }
-    return <div>{info}</div>;
   }
 }
 
 const mapStateToProps = state => ({
   nickname: state.user.nickname,
-  isAuthorized: state.user.authorized
+  isAuthorized: state.user.authorized,
+  role: state.user.role
 });
 
 export default compose(connect(mapStateToProps)(User));

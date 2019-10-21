@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { compose } from "redux";
-import { logout } from "../Actions/userActionCreaters";
+import { logout } from "../../Actions/userActionCreaters";
 
 class Navibar extends React.Component {
   handleLogOut = e => {
@@ -59,16 +59,6 @@ class Navibar extends React.Component {
               <Link className="dropdown-item" to="/user/edit">
                 Edit
               </Link>
-              {this.props.role === "Admin" && (
-                <>
-                  <Link className="dropdown-item" to="/users">
-                    Users List
-                  </Link>
-                  <Link className="dropdown-item" to="/items">
-                    Items List
-                  </Link>
-                </>
-              )}
               <div className="dropdown-divider"></div>
               <button className="dropdown-item" onClick={this.handleLogOut}>
                 Logout

@@ -10,6 +10,7 @@ import { errorToast, successToast } from "../../Components/Toasts/Toast";
 import { connect } from "react-redux";
 import { compose } from "redux";
 import UnAuthorize from "../../Components/UnAuthorize/UnAuthorize";
+import Sidebar from "../../Components/Sidebar/Sidebar";
 
 class ItemList extends React.Component {
   constructor(props) {
@@ -117,6 +118,7 @@ class ItemList extends React.Component {
           store={ToastsStore}
           position={ToastsContainerPosition.TOP_LEFT}
         />
+        <Sidebar/>
 
         <div className="jumbotron jumbotron">
           <div className="container">{this.pageRender()}</div>
