@@ -56,12 +56,12 @@ class ItemList extends React.Component {
 
   renderTableData() {
     return this.state.items.map(item => {
-      const { id, name, category, type,  cost } = item;
+      const { id, name, categoryName, typeName,  cost } = item;
       return (
         <tr key={id}>
           <td>{name}</td>
-          <td>{category}</td>
-          <td>{type}</td>
+          <td>{categoryName}</td>
+          <td>{typeName}</td>
           <td>{cost}</td>
           <td>
           <button

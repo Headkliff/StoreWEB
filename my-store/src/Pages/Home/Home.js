@@ -28,6 +28,7 @@ class Home extends React.Component {
           items: res.data,
           loading: false
         });
+        
       })
       .catch(error => {
         errorToast("Something went wrong");
@@ -40,15 +41,15 @@ class Home extends React.Component {
 
   renderItems() {
     return this.state.items.map(item => {
-      const { id, name, category, type, cost } = item;
+      const { id, name, categoryName, typeName, cost } = item;
       return (
         <Col xl="4" key={id}>
           <div className="card border-dark mb-3">
             <div className="card-body">
               <img src="\Media\nonIMG.png" className="card-img-top" alt="..." />
               <h5 className="card-text item-name">{name}</h5>
-              <p className="card-text">{category}</p>
-              <p className="card-text">{type}</p>
+              <p className="card-text">{categoryName}</p>
+              <p className="card-text">{typeName}</p>
               <p className="card-text">{cost} $</p>
               <button
                 className="btn btn-primary"

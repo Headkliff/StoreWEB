@@ -29,10 +29,11 @@ class Item extends React.Component {
     axios
       .get("https://localhost:44326/api/Item/" + this.state.id)
       .then(res => {
+        console.log(res.data)
         this.setState({
           name: res.data.name,
-          type: res.data.type,
-          category: res.data.category,
+          typeName: res.data.typeName,
+          categoryName: res.data.categoryName,
           cost: res.data.cost
         });
       })
@@ -67,10 +68,10 @@ class Item extends React.Component {
                 <h1 className="display-7">{this.state.name}</h1>
                 <Row>
                   <dt className="col-sm-3">Category:</dt>
-                  <dd className="col-sm-9">{this.state.category}</dd>
+                  <dd className="col-sm-9">{this.state.categoryName}</dd>
                   <dt className="col-sm-3">Type:</dt>
                   <dd className="col-sm-9">
-                    <p>{this.state.type}</p>
+                    <p>{this.state.typeName}</p>
                   </dd>
                   <dt className="col-sm-3">Cost:</dt>
                   <dd className="col-sm-9">
