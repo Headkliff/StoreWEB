@@ -29,7 +29,6 @@ class Item extends React.Component {
     axios
       .get("https://localhost:44326/api/Item/" + this.state.id)
       .then(res => {
-        console.log(res.data)
         this.setState({
           name: res.data.name,
           typeName: res.data.typeName,

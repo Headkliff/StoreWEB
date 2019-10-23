@@ -1,5 +1,5 @@
 import React from "react";
-import {Redirect} from "react-router"
+import { Redirect } from "react-router";
 import axios from "axios";
 import {
   ToastsContainer,
@@ -7,9 +7,10 @@ import {
   ToastsContainerPosition
 } from "react-toasts";
 import { errorToast, successToast } from "../../Components/Toasts/Toast";
-import { Jumbotron, Container } from "react-bootstrap";
+import { Jumbotron, Container, Form } from "react-bootstrap";
 import { connect } from "react-redux";
 import { compose } from "redux";
+import Sidebar from "../../Components/Sidebar/Sidebar";
 
 class EditItem extends React.Component {
   constructor(props) {
@@ -17,12 +18,17 @@ class EditItem extends React.Component {
     this.state = {
       id: this.props.match.params.id,
       name: "",
-      category: "",
-      type: "",
+      categoryName: "",
+      typeName: "",
       cost: 0,
-      loading: true
+      loading: true,
+      types: [],
+      type:{
+        name: this.typeName
+      }
     };
     this.getItem(props);
+    this.getTypes();
   }
 
   getItem() {
@@ -31,8 +37,9 @@ class EditItem extends React.Component {
       .then(res => {
         this.setState({
           name: res.data.name,
-          type: res.data.type,
-          category: res.data.category,
+          itemTypeId: res.data.itemTypeId,
+          typeName: res.data.typeName,
+          categoryName: res.data.categoryName,
           cost: res.data.cost
         });
       })
@@ -40,6 +47,31 @@ class EditItem extends React.Component {
         errorToast(error.response.data.message);
         this.setState({ loading: false });
       });
+  }
+
+  getTypes() {
+    axios
+      .get("https://localhost:44326/api/type/types")
+      .then(res => {
+        this.setState({
+          types: res.data
+        });
+      })
+      .catch(error => {
+        errorToast(error.response.data.message);
+        this.setState({ loading: false });
+      });
+  }
+
+  renderTypes() {
+    return this.state.types.map(type => {
+      const { id, name } = type;
+      return (
+        <option key={id}>
+          {name}
+        </option>
+      );
+    });
   }
 
   handleChange = e => {
@@ -50,18 +82,20 @@ class EditItem extends React.Component {
 
     this.setState({
       [name]: value
-    });
+    })
   };
 
   handleSubmit = e => {
     e.preventDefault();
+    console.log(this.state.type)
     const newItemData = {
       id: this.state.id,
       name: this.state.name,
-      category: this.state.category,
-      type: this.state.type,
+      categoryName: this.state.categoryName,
+      typeName: this.state.type,
       cost: this.state.cost
     };
+    console.log(newItemData);
     axios
       .post("https://localhost:44326/api/Item/edit", newItemData, {
         headers: { Authorization: "Bearer " + localStorage.getItem("token") }
@@ -75,16 +109,20 @@ class EditItem extends React.Component {
   };
 
   render() {
-    return (
-      (this.props.role === "Admin" ? (
+    return this.props.role === "Admin" ? (
       <>
         <ToastsContainer
           store={ToastsStore}
           position={ToastsContainerPosition.TOP_LEFT}
         />
+        <Sidebar />
         <Jumbotron>
           <Container>
-            <form className="needs-validation" noValidate onSubmit={this.handleSubmit}>
+            <form
+              className="needs-validation"
+              noValidate
+              onSubmit={this.handleSubmit}
+            >
               <div>
                 <div className="form-group row">
                   <label
@@ -125,7 +163,7 @@ class EditItem extends React.Component {
                       name="category"
                       formNoValidate
                       minLength="5"
-                      placeholder={this.state.category}
+                      placeholder={this.state.categoryName}
                       value={this.state.category}
                       onChange={this.handleChange}
                     />
@@ -137,18 +175,14 @@ class EditItem extends React.Component {
                     Type:
                   </label>
                   <div className="col-sm-10">
-                    <input
-                      type="text"
-                      className={"form-control "}
-                      id="type"
+                    <Form.Control
+                      as="select"
                       name="type"
-                      formNoValidate
-                      required
-                      minLength="5"
-                      placeholder={this.state.type}
                       value={this.state.type}
                       onChange={this.handleChange}
-                    />
+                    >
+                      {this.renderTypes()}
+                    </Form.Control>
                   </div>
                 </div>
               </div>
@@ -161,7 +195,9 @@ class EditItem extends React.Component {
           </Container>
         </Jumbotron>
       </>
-      ):<Redirect to="/"/>));
+    ) : (
+      <Redirect to="/" />
+    );
   }
 }
 
