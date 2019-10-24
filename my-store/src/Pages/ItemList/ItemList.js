@@ -6,29 +6,20 @@ import {
   ToastsStore,
   ToastsContainerPosition
 } from "react-toasts";
-import { errorToast, successToast } from "../../Components/Toasts/Toast";
+import { errorToast } from "../../Components/Toasts/Toast";
 import { connect } from "react-redux";
-import { compose } from "redux";
 import UnAuthorize from "../../Components/UnAuthorize/UnAuthorize";
 import Sidebar from "../../Components/Sidebar/Sidebar";
 import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
+import EditButton from "./EditButton";
+import DeleteButton from "./DeleteButton";
 
-class EditButton extends React.Component {
-  render() {
-    return (
-      <button
-        type="button"
-        className="btn btn-warning btn-sm"
-        onClick={() => this.editItem(this.props.id)}
-      >
-        Edit
-      </button>
-    );
-  }
+function editButton(cell, row) {
+  return <EditButton id={row.id} />;
 }
 
-function editButton(cell, row,enumObject,index) {
-  return <EditButton id={index} />;
+function deleteButton(cell, row) {
+  return <DeleteButton id={row.id} />;
 }
 
 class ItemList extends React.Component {
@@ -69,56 +60,6 @@ class ItemList extends React.Component {
       });
   }
 
-  deleteItem = item => {
-    axios
-      .delete("https://localhost:44326/api/item/delete", {
-        headers: { Authorization: "Bearer " + localStorage.getItem("token") },
-        data: item
-      })
-      .then(res => {
-        successToast("User delete!");
-        this.getItem();
-      })
-      .catch(error => {
-        errorToast(error.response.data.message);
-      });
-  };
-
-  editItem = id => {
-    this.props.history.push("/item/edit/" + id);
-  };
-
-  renderTableData() {
-    return this.state.items.map(item => {
-      const { id, name, categoryName, typeName, cost } = item;
-      return (
-        <tr key={id}>
-          <td>{name}</td>
-          <td>{categoryName}</td>
-          <td>{typeName}</td>
-          <td>{cost}</td>
-          <td>
-            <button
-              type="button"
-              className="btn btn-info btn-sm"
-              onClick={() => this.editItem()}
-            >
-              Edit
-            </button>
-          </td>
-          <td>
-            <button
-              type="button"
-              className="btn btn-danger btn-sm"
-              onClick={() => this.deleteItem()}
-            >
-              Delete
-            </button>
-          </td>
-        </tr>
-      );
-    });
-  }
   pageRender() {
     if (this.props.isAuthorized) {
       return (
@@ -127,10 +68,10 @@ class ItemList extends React.Component {
             All Store Items
           </h1>
           <BootstrapTable
+            ref="tabel"
             data={this.state.items}
             version="4"
             multiColumnSort={2}
-            
           >
             <TableHeaderColumn isKey dataField="id" width="100">
               Item ID
@@ -154,8 +95,11 @@ class ItemList extends React.Component {
             <TableHeaderColumn dataField="cost" dataSort={true} width="125">
               Cost
             </TableHeaderColumn>
-            <TableHeaderColumn  dataFormat={editButton}>
+            <TableHeaderColumn dataFormat={editButton} width="75">
               Edit
+            </TableHeaderColumn>
+            <TableHeaderColumn dataFormat={deleteButton} width="75">
+              Delete
             </TableHeaderColumn>
           </BootstrapTable>
         </>
@@ -182,9 +126,10 @@ class ItemList extends React.Component {
     );
   }
 }
+
 const mapStateToProps = state => ({
   nickname: state.user.nickname,
   isAuthorized: state.user.authorized,
   role: state.user.role
 });
-export default compose(connect(mapStateToProps)(ItemList));
+export default connect(mapStateToProps)(ItemList);
