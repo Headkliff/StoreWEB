@@ -1,6 +1,6 @@
 import React from "react";
 import axios from "axios";
-import {Redirect} from "react-router"
+import { Redirect } from "react-router";
 import {
   ToastsContainer,
   ToastsStore,
@@ -11,6 +11,25 @@ import { connect } from "react-redux";
 import { compose } from "redux";
 import UnAuthorize from "../../Components/UnAuthorize/UnAuthorize";
 import Sidebar from "../../Components/Sidebar/Sidebar";
+import { BootstrapTable, TableHeaderColumn } from "react-bootstrap-table";
+
+class EditButton extends React.Component {
+  render() {
+    return (
+      <button
+        type="button"
+        className="btn btn-warning btn-sm"
+        onClick={() => this.editItem(this.props.id)}
+      >
+        Edit
+      </button>
+    );
+  }
+}
+
+function editButton(cell, row,enumObject,index) {
+  return <EditButton id={index} />;
+}
 
 class ItemList extends React.Component {
   constructor(props) {
@@ -19,9 +38,10 @@ class ItemList extends React.Component {
       loading: true,
       items: []
     };
-    this.getUsers();
+    this.getItem();
+    this.getTypes();
   }
-  getUsers = () => {
+  getItem = () => {
     axios
       .get("https://localhost:44326/api/item/items")
       .then(res => {
@@ -35,7 +55,21 @@ class ItemList extends React.Component {
       });
   };
 
-  deleteUser = item => {
+  getTypes() {
+    axios
+      .get("https://localhost:44326/api/item/types")
+      .then(res => {
+        this.setState({
+          types: res.data
+        });
+      })
+      .catch(error => {
+        errorToast(error.response.data.message);
+        this.setState({ loading: false });
+      });
+  }
+
+  deleteItem = item => {
     axios
       .delete("https://localhost:44326/api/item/delete", {
         headers: { Authorization: "Bearer " + localStorage.getItem("token") },
@@ -43,20 +77,20 @@ class ItemList extends React.Component {
       })
       .then(res => {
         successToast("User delete!");
-        this.getUsers();
+        this.getItem();
       })
       .catch(error => {
         errorToast(error.response.data.message);
       });
   };
 
-  editUser = id=>{
-      this.props.history.push("/item/edit/"+id)
-  }
+  editItem = id => {
+    this.props.history.push("/item/edit/" + id);
+  };
 
   renderTableData() {
     return this.state.items.map(item => {
-      const { id, name, categoryName, typeName,  cost } = item;
+      const { id, name, categoryName, typeName, cost } = item;
       return (
         <tr key={id}>
           <td>{name}</td>
@@ -64,10 +98,10 @@ class ItemList extends React.Component {
           <td>{typeName}</td>
           <td>{cost}</td>
           <td>
-          <button
+            <button
               type="button"
               className="btn btn-info btn-sm"
-              onClick={() => this.editUser(id)}
+              onClick={() => this.editItem()}
             >
               Edit
             </button>
@@ -76,7 +110,7 @@ class ItemList extends React.Component {
             <button
               type="button"
               className="btn btn-danger btn-sm"
-              onClick={() => this.deleteUser(item)}
+              onClick={() => this.deleteItem()}
             >
               Delete
             </button>
@@ -92,19 +126,38 @@ class ItemList extends React.Component {
           <h1 id="title" align="center">
             All Store Items
           </h1>
-          <table id="users" className="table table-hover table-dark">
-            <thead>
-              <tr>
-                <th scope="col">Name</th>
-                <th scope="col">Category</th>
-                <th scope="col">Type</th>
-                <th scope="col">Cost</th>
-                <th scope="col"></th>
-                <th scope="col"></th>
-              </tr>
-            </thead>
-            <tbody>{this.renderTableData()}</tbody>
-          </table>
+          <BootstrapTable
+            data={this.state.items}
+            version="4"
+            multiColumnSort={2}
+            
+          >
+            <TableHeaderColumn isKey dataField="id" width="100">
+              Item ID
+            </TableHeaderColumn>
+            <TableHeaderColumn
+              dataField="name"
+              filter={{ type: "TextFilter", delay: 1000 }}
+            >
+              Name
+            </TableHeaderColumn>
+            <TableHeaderColumn dataField="categoryName" dataSort={true}>
+              Category
+            </TableHeaderColumn>
+            <TableHeaderColumn
+              dataField="typeName"
+              fdataField="categoryName"
+              dataSort={true}
+            >
+              Type
+            </TableHeaderColumn>
+            <TableHeaderColumn dataField="cost" dataSort={true} width="125">
+              Cost
+            </TableHeaderColumn>
+            <TableHeaderColumn  dataFormat={editButton}>
+              Edit
+            </TableHeaderColumn>
+          </BootstrapTable>
         </>
       );
     } else {
@@ -112,24 +165,26 @@ class ItemList extends React.Component {
     }
   }
   render() {
-    return (
-      (this.props.role === "Admin"?(<>
+    return this.props.role === "Admin" ? (
+      <>
         <ToastsContainer
           store={ToastsStore}
           position={ToastsContainerPosition.TOP_LEFT}
         />
-        <Sidebar/>
+        <Sidebar />
 
         <div className="jumbotron jumbotron">
           <div className="container">{this.pageRender()}</div>
         </div>
       </>
-    ): <Redirect to='/'/> ));
+    ) : (
+      <Redirect to="/" />
+    );
   }
 }
 const mapStateToProps = state => ({
   nickname: state.user.nickname,
-  isAuthorized: state.user.authorized, 
-  role : state.user.role
+  isAuthorized: state.user.authorized,
+  role: state.user.role
 });
 export default compose(connect(mapStateToProps)(ItemList));
