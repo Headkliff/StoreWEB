@@ -1,7 +1,6 @@
 import React from "react";
 import { Container, Row, Col } from "react-bootstrap";
 import axios from "axios";
-import {Link} from "react-router-dom"
 import {
   ToastsContainer,
   ToastsStore,
@@ -22,7 +21,7 @@ class Home extends React.Component {
 
   getItems() {
     axios
-      .get("https://localhost:44326/api/Item/items")
+      .get("https://localhost:44326/api/item/items")
       .then(res => {
         this.setState({
           items: res.data,
@@ -83,37 +82,6 @@ class Home extends React.Component {
             </Row>
           </Container>
         </div>
-        <Container>
-          <nav aria-label="Page navigation example">
-            <ul className="pagination">
-              <li className="page-item">
-                <Link className="page-link" to="#" aria-label="Previous">
-                  <span aria-hidden="true">&laquo;</span>
-                </Link>
-              </li>
-              <li className="page-item">
-                <Link className="page-link" to="#">
-                  1
-                </Link>
-              </li>
-              <li className="page-item">
-                <Link className="page-link" to="#">
-                  2
-                </Link>
-              </li>
-              <li className="page-item">
-                <Link className="page-link" to="#">
-                  3
-                </Link>
-              </li>
-              <li className="page-item">
-                <Link className="page-link" to="#" aria-label="Next">
-                  <span aria-hidden="true">&raquo;</span>
-                </Link>
-              </li>
-            </ul>
-          </nav>
-        </Container>
       </>
     );
   }

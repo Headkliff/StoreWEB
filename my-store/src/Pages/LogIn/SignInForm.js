@@ -57,8 +57,8 @@ class SignInForm extends Component {
         .post("https://localhost:44326/api/Login/login", user)
         .then(res => {
           localStorage.setItem("token", res.data.token);
-          localStorage.setItem("nickname", this.state.nickname)
-          localStorage.setItem("role", res.data.user.role)
+          localStorage.setItem("nickname", res.data.user.nickname);
+          localStorage.setItem("role", res.data.user.role);
           this.props.userlogin(this.state.nickname, res.data.user.role);
           this.props.history.push("/");
         })
@@ -66,7 +66,7 @@ class SignInForm extends Component {
           errorToast(error.response.data.message);
         });
     } else {
-      errorToast("Fill all inputs");
+      errorToast("Invalid data in inputs");
     }
   };
 
@@ -78,11 +78,11 @@ class SignInForm extends Component {
           position={ToastsContainerPosition.TOP_LEFT}
         />
         <div className="container">
-          <form className="needs-validation" noValidate onSubmit={this.handleSubmit}>
+          <form className='float-md' onSubmit={this.handleSubmit}>
             <div className="input-group mb-3">
               <input
                 type="text"
-                className="form-control "
+                className="col-7 form-control "
                 placeholder="Username"
                 aria-describedby="basic-addon1"
                 id="nickname"
@@ -98,7 +98,7 @@ class SignInForm extends Component {
             <div className="input-group mb-3">
               <input
                 type="password"
-                className="form-control "
+                className="col-7 form-control "
                 placeholder="Password"
                 aria-describedby="basic-addon2"
                 name="password"
@@ -132,8 +132,8 @@ class SignInForm extends Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-  userlogin: (nickname,role) => {
-    dispatch(login(nickname,role));
+  userlogin: (nickname, role) => {
+    dispatch(login(nickname, role));
   }
 });
 

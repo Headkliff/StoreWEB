@@ -12,10 +12,10 @@ class Sidebar extends React.Component {
               <Link to="/users">User List</Link>
             </li>
             <li>
-              <Link to="/items">Product List</Link>
+              <Link to="/items">Item List</Link>
             </li>
             <li>
-              <Link to="#">Something</Link>
+              <Link to="/items/create">Create Item</Link>
             </li>
           </ul>
         </div>

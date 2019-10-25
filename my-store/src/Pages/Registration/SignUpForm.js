@@ -74,7 +74,7 @@ class SignUpForm extends Component {
           <form onSubmit={this.handleSubmit}>
             <div className="form-group">
               <div className="row">
-                <div className="col-4 form-group">
+                <div className="col-6 form-group">
                   <label htmlFor="nickname">Nickname</label>
                   <div className="input-group mb-3">
                     <input
@@ -95,7 +95,7 @@ class SignUpForm extends Component {
                   </div>
                 </div>
 
-                <div className="col-8 form-group">
+                <div className="col-6 form-group">
                   <label className="Label" htmlFor="email">
                     Email
                   </label>

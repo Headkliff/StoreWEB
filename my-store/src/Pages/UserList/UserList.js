@@ -36,6 +36,7 @@ class UserList extends React.Component {
         this.setState({ loading: false });
       });
   };
+  
   deleteUser = user => {
     axios
       .delete("https://localhost:44326/api/User/delete", {
@@ -50,6 +51,7 @@ class UserList extends React.Component {
         errorToast(error.response.data.message);
       });
   };
+
   blockUser = user => {
     axios
       .delete("https://localhost:44326/api/User/softDelete", {
@@ -78,6 +80,7 @@ class UserList extends React.Component {
         errorToast(error.response.data.message);
       });
   };
+  
   blockButton(user) {
     if (user.isDeleted) {
       return (

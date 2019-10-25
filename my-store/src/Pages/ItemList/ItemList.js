@@ -19,7 +19,7 @@ function editButton(cell, row) {
 }
 
 function deleteButton(cell, row) {
-  return <DeleteButton id={row.id} />;
+  return <DeleteButton item={row} />;
 }
 
 class ItemList extends React.Component {
@@ -55,7 +55,7 @@ class ItemList extends React.Component {
         });
       })
       .catch(error => {
-        errorToast(error.response.data.message);
+        errorToast(error.response);
         this.setState({ loading: false });
       });
   }
@@ -71,6 +71,7 @@ class ItemList extends React.Component {
             ref="tabel"
             data={this.state.items}
             version="4"
+            pagination
             multiColumnSort={2}
           >
             <TableHeaderColumn isKey dataField="id" width="100">
@@ -108,6 +109,7 @@ class ItemList extends React.Component {
       return <UnAuthorize />;
     }
   }
+
   render() {
     return this.props.role === "Admin" ? (
       <>

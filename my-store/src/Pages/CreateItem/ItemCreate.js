@@ -9,42 +9,21 @@ import {
 import { errorToast, successToast } from "../../Components/Toasts/Toast";
 import { Jumbotron, Container, Form } from "react-bootstrap";
 import { connect } from "react-redux";
-import { compose } from "redux";
 import Sidebar from "../../Components/Sidebar/Sidebar";
 
-class EditItem extends React.Component {
+class ItemCreate extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      id: this.props.match.params.id,
       name: "",
       categoryName: "",
       typeName: "",
       cost: 0,
-      loading: true,
       types: [],
       categoryes: []
     };
-    this.getItem();
     this.getTypes();
     this.getCategories();
-  }
-
-  getItem() {
-    axios
-      .get("https://localhost:44326/api/Item/" + this.state.id)
-      .then(res => {
-        this.setState({
-          name: res.data.name,
-          typeName: res.data.typeName,
-          categoryName: res.data.categoryName,
-          cost: res.data.cost
-        });
-      })
-      .catch(error => {
-        errorToast(error.response.data.message);
-        this.setState({ loading: false });
-      });
   }
 
   getTypes() {
@@ -56,7 +35,7 @@ class EditItem extends React.Component {
         });
       })
       .catch(error => {
-        errorToast(error.response.data.message);
+        errorToast(error.response);
         this.setState({ loading: false });
       });
   }
@@ -89,7 +68,7 @@ class EditItem extends React.Component {
     });
   }
 
-  handleChange = e=> {
+  handleChange = (e) => {
     e.preventDefault();
     const target = e.target;
     const value = target.type === "checkbox" ? target.checked : target.value;
@@ -103,21 +82,22 @@ class EditItem extends React.Component {
   handleSubmit = e => {
     e.preventDefault();
     const newItemData = {
-      id: this.state.id,
       name: this.state.name,
       categoryName: this.state.categoryName,
       typeName: this.state.typeName,
       cost: this.state.cost
     };
     axios
-      .post("https://localhost:44326/api/Item/edit", newItemData, {
+      .post("https://localhost:44326/api/item/create", newItemData, {
         headers: { Authorization: "Bearer " + localStorage.getItem("token") }
       })
       .then(res => {
-        successToast("New data set");
+        successToast("New Item created");
       })
       .catch(error => {
-        errorToast("Error "+ error.response.status + ":" +error.response.data.message);
+        errorToast(
+          "Error " + error.response.status + ":" + error.response.data.message
+        );
       });
   };
 
@@ -137,10 +117,7 @@ class EditItem extends React.Component {
             >
               <div>
                 <div className="form-group row">
-                  <label
-                    htmlFor="itemName"
-                    className="col-sm-2 col-form-label"
-                  >
+                  <label htmlFor="itemName" className="col-sm-2 col-form-label">
                     Item Name:
                   </label>
                   <div className="col-sm-10">
@@ -152,7 +129,7 @@ class EditItem extends React.Component {
                       formNoValidate
                       required
                       minLength="4"
-                      placeholder={this.state.name}
+                      placeholder={"Item Name"}
                       value={this.state.name}
                       onChange={this.handleChange}
                     />
@@ -160,17 +137,13 @@ class EditItem extends React.Component {
                 </div>
 
                 <div className="form-group row">
-                  <label
-                    htmlFor="category"
-                    className="col-sm-2 col-form-label"
-                  >
+                  <label htmlFor="category" className="col-sm-2 col-form-label">
                     Category:
                   </label>
                   <div className="col-sm-10">
                     <Form.Control
                       as="select"
                       name="categoryName"
-                      formNoValidate
                       value={this.state.categoryName}
                       onChange={this.handleChange}
                     >
@@ -187,7 +160,6 @@ class EditItem extends React.Component {
                     <Form.Control
                       as="select"
                       name="typeName"
-                      formNoValidate
                       value={this.state.typeName}
                       onChange={this.handleChange}
                     >
@@ -197,10 +169,7 @@ class EditItem extends React.Component {
                 </div>
 
                 <div className="form-group row">
-                  <label
-                    htmlFor="cost"
-                    className="col-sm-2 col-form-label"
-                  >
+                  <label htmlFor="cost" className="col-sm-2 col-form-label">
                     Cost:
                   </label>
                   <div className="col-sm-10">
@@ -211,7 +180,7 @@ class EditItem extends React.Component {
                       required
                       name="cost"
                       formNoValidate
-                      placeholder={this.state.cost}
+                      placeholder={"Cost"}
                       value={this.state.cost}
                       onChange={this.handleChange}
                     />
@@ -220,7 +189,7 @@ class EditItem extends React.Component {
               </div>
               <div className="FormField">
                 <button type="submit" className="btn btn-primary">
-                  Submit Edits
+                  Create Item
                 </button>
               </div>
             </form>
@@ -238,4 +207,4 @@ const mapStateToProps = state => ({
   isAuthorized: state.user.authorized,
   role: state.user.role
 });
-export default compose(connect(mapStateToProps)(EditItem));
+export default connect(mapStateToProps)(ItemCreate);
