@@ -99,7 +99,7 @@ class User extends React.Component {
     if (this.props.isAuthorized) {
       return (
         <>
-          {this.props.role === "Admin" && <Sidebar />}
+          <Sidebar />
           <div className="center">
             <div className="container">{this.userInfo()}</div>
           </div>

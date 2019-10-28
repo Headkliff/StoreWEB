@@ -7,35 +7,65 @@ import {
   ToastsContainerPosition
 } from "react-toasts";
 import { errorToast } from "../../Components/Toasts/Toast";
-import "./Home.css"
+import "./Home.css";
 
 class Home extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       items: [],
-      loading: true
+      page: 0
     };
     this.getItems();
   }
 
-  getItems() {
+  getItems = () => {
+    const query = {
+      name: "",
+      selectedSort: "DateDesc",
+      pageNumber: this.state.page
+    };
     axios
-      .get("https://localhost:44326/api/item/items")
+      .post("https://localhost:44326/api/item/items", query)
       .then(res => {
         this.setState({
           items: res.data,
-          loading: false
         });
-        
       })
       .catch(error => {
         errorToast("Something went wrong");
-        this.setState({ loading: false });
       });
-  }
+  };
+
+  PageCount = i => {
+    return (
+      <li className="page-item">
+        <h2 className="btn btn-link page-link">{this.state.page+1}</h2>
+      </li>
+    );
+  };
+
+  Previous = () => {
+    if (this.state.page>0 ) {
+      this.setState ( {
+        page: this.state.page --
+      });
+    }
+    this.getItems();
+  };
+
+  Next = () => {
+    if (this.state.items.length<9) {
+      this.setState ({
+        page: (this.state.page ++)
+      });
+    }
+    console.log(this.state.page)
+    this.getItems();
+  };
+
   showMore(id) {
-    this.props.history.push("/item/"+id);
+    this.props.history.push("/item/" + id);
   }
 
   renderItems() {
@@ -62,6 +92,7 @@ class Home extends React.Component {
       );
     });
   }
+
   render() {
     return (
       <>
@@ -70,16 +101,36 @@ class Home extends React.Component {
           position={ToastsContainerPosition.TOP_LEFT}
         />
         <div className="jumbotron">
-          <h1 align="center">Welcome to My Store</h1>
           <Container>
             <Row>
-              {/* <Col xs={1} md={2}>
-              Menu
-            </Col> */}
               <Col sm>
                 <Row>{this.renderItems()}</Row>
               </Col>
             </Row>
+            <nav aria-label="Page navigation example">
+              <ul class="pagination">
+                <li class="page-item">
+                  <button
+                    type="button"
+                    className="btn btn-link page-link"
+                    aria-label="Previous"
+                    onClick={() => this.Previous()}
+                  >
+                    <span aria-hidden="true">&laquo;</span>
+                  </button>
+                </li>
+                {this.PageCount()}
+                <li className="page-item">
+                  <button
+                    className="btn btn-link page-link"
+                    aria-label="Next"
+                    onClick={() => this.Next()}
+                  >
+                    <span aria-hidden="true">&raquo;</span>
+                  </button>
+                </li>
+              </ul>
+            </nav>
           </Container>
         </div>
       </>

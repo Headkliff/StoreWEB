@@ -1,7 +1,6 @@
 import React from "react";
 import axios from "axios";
 import { connect } from "react-redux";
-import { compose } from "redux";
 import { Container, Row, Col, Jumbotron } from "react-bootstrap";
 import {
   ToastsContainer,
@@ -105,4 +104,4 @@ const mapStateToProps = state => ({
   role: state.user.role
 });
 
-export default compose(connect(mapStateToProps)(Item));
+export default (connect(mapStateToProps)(Item));
