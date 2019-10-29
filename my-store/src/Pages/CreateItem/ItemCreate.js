@@ -1,6 +1,5 @@
 import React from "react";
 import { Redirect } from "react-router";
-import axios from "axios";
 import {
   ToastsContainer,
   ToastsStore,
@@ -10,6 +9,7 @@ import { errorToast, successToast } from "../../Components/Toasts/Toast";
 import { Jumbotron, Container, Form } from "react-bootstrap";
 import { connect } from "react-redux";
 import Sidebar from "../../Components/Sidebar/Sidebar";
+import API from "../../Components/Axios/API";
 
 class ItemCreate extends React.Component {
   constructor(props) {
@@ -27,8 +27,8 @@ class ItemCreate extends React.Component {
   }
 
   getTypes() {
-    axios
-      .get("https://localhost:44326/api/item/types")
+    API
+      .get("/item/types")
       .then(res => {
         this.setState({
           types: res.data
@@ -41,8 +41,8 @@ class ItemCreate extends React.Component {
   }
 
   getCategories() {
-    axios
-      .get("https://localhost:44326/api/item/categories")
+    API
+      .get("/item/categories")
       .then(res => {
         this.setState({
           categoryes: res.data
@@ -87,10 +87,9 @@ class ItemCreate extends React.Component {
       typeName: this.state.typeName,
       cost: this.state.cost
     };
-    axios
-      .post("https://localhost:44326/api/item/create", newItemData, {
-        headers: { Authorization: "Bearer " + localStorage.getItem("token") }
-      })
+    API
+      .post("/item/create", newItemData
+      )
       .then(res => {
         successToast("New Item created");
       })

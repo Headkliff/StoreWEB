@@ -20,7 +20,7 @@ export default function userReducers(state = initialState, action) {
         ...state,
         nickname: "",
         role: "",
-        authorized: false
+        authorized: false,
       };
 
     default:

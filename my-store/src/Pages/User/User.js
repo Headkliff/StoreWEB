@@ -1,15 +1,15 @@
 import React from "react";
-import axios from "axios";
+
 import { connect } from "react-redux";
 import { compose } from "redux";
 import UnAuthorize from "../../Components/UnAuthorize/UnAuthorize";
 import { errorToast } from "../../Components/Toasts/Toast";
 import Sidebar from "../../Components/Sidebar/Sidebar";
+import API from "../../Components/Axios/API";
 
 class User extends React.Component {
   constructor(props) {
     super(props);
-    this.getUserInfo();
     this.state = {
       nickname: "",
       email: "",
@@ -17,13 +17,12 @@ class User extends React.Component {
       secondName: "",
       loading: true
     };
+    this.getUserInfo();
   }
 
   getUserInfo() {
-    axios
-      .get("https://localhost:44326/api/user", {
-        headers: { Authorization: "Bearer " + localStorage.getItem("token") }
-      })
+    API
+      .get("/user")
       .then(res => {
         this.setState({
           nickname: res.data.nickname,

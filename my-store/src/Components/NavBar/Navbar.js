@@ -3,13 +3,13 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { compose } from "redux";
 import { logout } from "../../Actions/userActionCreaters";
-import axios from "axios";
 import {
   ToastsContainer,
   ToastsStore,
   ToastsContainerPosition
 } from "react-toasts";
 import { errorToast } from "../../Components/Toasts/Toast";
+import API from "../Axios/API";
 
 class Navibar extends React.Component {
   constructor(props) {
@@ -41,8 +41,7 @@ class Navibar extends React.Component {
       name: this.state.search,
       selectedSort: ""
     };
-    axios
-      .post("https://localhost:44326/api/item/items", query)
+    API.post("/item/items", query)
       .then(res => {
         console.log(res);
       })
@@ -50,6 +49,32 @@ class Navibar extends React.Component {
         errorToast("Something went wrong");
       });
   };
+
+  serchForm() {
+    return (
+      <>
+      {/* // <form class="form-inline my-2 my-lg-0">
+      //   <input
+      //     class="form-control mr-sm-2"
+      //     id="search"
+      //     name="search"
+      //     type="search"
+      //     placeholder="Search"
+      //     aria-label="Search"
+      //     value={this.state.search}
+      //     onChange={() => this.handleChenge}
+      //   />
+      //   <button
+      //     class="btn btn-outline-success my-2 my-sm-0"
+      //     type="button"
+      //     onClick={() => this.Search()}
+      //   >
+      //     Search
+      //   </button>
+      // </form> */}
+      </>
+    );
+  }
 
   navigation() {
     if (!this.props.isAuthorized) {
@@ -63,25 +88,7 @@ class Navibar extends React.Component {
             <Link className="navbar-brand" to="/">
               My Store
             </Link>
-            <form className="form-inline my-2 my-lg-0">
-              <input
-                className="form-control mr-sm-2"
-                id = 'search'
-                name="search"
-                type="search"
-                placeholder="Search"
-                aria-label="Search"
-                value={this.state.search}
-                onChange={() => this.handleChenge}
-              />
-              <button
-                className="btn btn-outline-success my-2 my-sm-0"
-                type="button"
-                onClick={() => this.Search()}
-              >
-                Search
-              </button>
-            </form>
+            {this.serchForm()}
             <div className="navbar" id="navbarSupportedContent">
               <ol className="nav justify-content-end mr-auto">
                 <li className="nav-item">
@@ -106,25 +113,7 @@ class Navibar extends React.Component {
         <Link className="navbar-brand" to="/">
           My Store
         </Link>
-        <form class="form-inline my-2 my-lg-0">
-          <input
-            class="form-control mr-sm-2"
-            id='search'
-            name="search"
-            type="search"
-            placeholder="Search"
-            aria-label="Search"
-            value={this.state.search}
-            onChange={() => this.handleChenge}
-          />
-          <button
-            class="btn btn-outline-success my-2 my-sm-0"
-            type="button"
-            onClick={() => this.Search()}
-          >
-            Search
-          </button>
-        </form>
+        {this.serchForm()}
         <div className="navbar" id="navbarSupportedContent">
           <div className="btn-group dropleft">
             <button

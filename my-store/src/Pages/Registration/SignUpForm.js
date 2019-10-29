@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
-import axios from "axios";
 import "./register.css";
 import { login } from "../../Actions/userActionCreaters";
 import { compose } from "redux";
@@ -11,6 +10,7 @@ import {
   ToastsContainerPosition
 } from "react-toasts";
 import { errorToast } from "../../Components/Toasts/Toast";
+import API from "../../Components/Axios/API";
 
 
 
@@ -46,8 +46,8 @@ class SignUpForm extends Component {
         email: this.state.email
       };
 
-      axios
-        .post("https://localhost:44326/api/login/registration", user)
+      API
+        .post("/login/registration", user)
         .then(res => {
           localStorage.setItem("token", res.data.token);
           localStorage.setItem("nickname", this.state.nickname)

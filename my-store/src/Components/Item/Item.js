@@ -1,5 +1,4 @@
 import React from "react";
-import axios from "axios";
 import { connect } from "react-redux";
 import { Container, Row, Col, Jumbotron } from "react-bootstrap";
 import {
@@ -8,6 +7,7 @@ import {
   ToastsContainerPosition
 } from "react-toasts";
 import { errorToast } from "../../Components/Toasts/Toast";
+import API from "../Axios/API";
 
 class Item extends React.Component {
   constructor(props) {
@@ -25,8 +25,8 @@ class Item extends React.Component {
   }
 
   getItem() {
-    axios
-      .get("https://localhost:44326/api/Item/" + this.state.id)
+    API
+      .get("Item/" + this.state.id)
       .then(res => {
         this.setState({
           name: res.data.name,

@@ -1,6 +1,6 @@
 import React from "react"
-import axios from "axios";
 import { errorToast, successToast } from "../../Components/Toasts/Toast";
+import API from "../../Components/Axios/API";
 
 class DeleteButton extends React.Component {
 
@@ -13,8 +13,8 @@ class DeleteButton extends React.Component {
       cost: item.cost
     } 
 
-    axios
-      .delete("https://localhost:44326/api/item/delete/", {
+    API
+      .delete("/item/delete/", {
         headers: { Authorization: "Bearer " + localStorage.getItem("token") },
         data: deleteItem
       })

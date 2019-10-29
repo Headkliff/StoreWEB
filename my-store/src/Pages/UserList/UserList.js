@@ -1,5 +1,5 @@
 import React from "react";
-import axios from "axios";
+
 import { Redirect } from "react-router";
 import {
   ToastsContainer,
@@ -11,6 +11,7 @@ import { connect } from "react-redux";
 import { compose } from "redux";
 import UnAuthorize from "../../Components/UnAuthorize/UnAuthorize";
 import Sidebar from "../../Components/Sidebar/Sidebar";
+import API from "../../Components/Axios/API";
 
 class UserList extends React.Component {
   constructor(props) {
@@ -22,10 +23,7 @@ class UserList extends React.Component {
     this.getUsers();
   }
   getUsers = () => {
-    axios
-      .get("https://localhost:44326/api/user/userList", {
-        headers: { Authorization: "Bearer " + localStorage.getItem("token") }
-      })
+    API.get("/user/userList")
       .then(res => {
         this.setState({
           users: res.data,
@@ -36,13 +34,9 @@ class UserList extends React.Component {
         this.setState({ loading: false });
       });
   };
-  
+
   deleteUser = user => {
-    axios
-      .delete("https://localhost:44326/api/User/delete", {
-        headers: { Authorization: "Bearer " + localStorage.getItem("token") },
-        data: user
-      })
+    API.delete("/User/delete", user)
       .then(res => {
         successToast("User delete!");
         this.getUsers();
@@ -53,11 +47,7 @@ class UserList extends React.Component {
   };
 
   blockUser = user => {
-    axios
-      .delete("https://localhost:44326/api/User/softDelete", {
-        headers: { Authorization: "Bearer " + localStorage.getItem("token") },
-        data: user
-      })
+    API.delete("/User/softDelete", user)
       .then(res => {
         successToast("User sucssesfuly blocked!");
         this.getUsers();
@@ -67,11 +57,7 @@ class UserList extends React.Component {
       });
   };
   unlockUser = user => {
-    axios
-      .delete("https://localhost:44326/api/User/unlock", {
-        headers: { Authorization: "Bearer " + localStorage.getItem("token") },
-        data: user
-      })
+    API.delete("/User/unlock", user)
       .then(res => {
         successToast("User sucssesfuly unlocked!");
         this.getUsers();
@@ -80,7 +66,7 @@ class UserList extends React.Component {
         errorToast(error.response.data.message);
       });
   };
-  
+
   blockButton(user) {
     if (user.isDeleted) {
       return (
@@ -103,6 +89,7 @@ class UserList extends React.Component {
       </button>
     );
   }
+  
   renderTableData() {
     return this.state.users.map(user => {
       const { id, nickname, email, firstName, secondName, isDeleted } = user;
@@ -161,7 +148,7 @@ class UserList extends React.Component {
           store={ToastsStore}
           position={ToastsContainerPosition.TOP_LEFT}
         />
-        <Sidebar/>
+        <Sidebar />
         <div className="jumbotron jumbotron">
           <div className="container">{this.pageRender()}</div>
         </div>

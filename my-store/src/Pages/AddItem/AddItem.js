@@ -1,4 +1,5 @@
 import React from "react";
+import API from "../../Components/Axios/API";
 
 class AddItem extends React.Component {
   constructor(props) {
@@ -18,8 +19,8 @@ class AddItem extends React.Component {
   }
 
   getTypes() {
-    axios
-      .get("https://localhost:44326/api/item/types")
+    API
+      .get("/item/types")
       .then(res => {
         this.setState({
           types: res.data
@@ -32,8 +33,8 @@ class AddItem extends React.Component {
   }
 
   getCategories() {
-    axios
-      .get("https://localhost:44326/api/item/categories")
+    API
+      .get("/item/categories")
       .then(res => {
         this.setState({
           categoryes: res.data
@@ -78,10 +79,8 @@ class AddItem extends React.Component {
       typeName: this.state.type,
       cost: this.state.cost
     };
-    axios
-      .post("https://localhost:44326/api/Item/create", newItemData, {
-        headers: { Authorization: "Bearer " + localStorage.getItem("token") }
-      })
+    API
+      .post("/Item/create", newItemData)
       .then(res => {
         successToast("New item created");
       })

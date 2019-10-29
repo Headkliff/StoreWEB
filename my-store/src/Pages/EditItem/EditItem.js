@@ -1,6 +1,5 @@
 import React from "react";
 import { Redirect } from "react-router";
-import axios from "axios";
 import {
   ToastsContainer,
   ToastsStore,
@@ -11,6 +10,7 @@ import { Jumbotron, Container, Form } from "react-bootstrap";
 import { connect } from "react-redux";
 import { compose } from "redux";
 import Sidebar from "../../Components/Sidebar/Sidebar";
+import API from "../../Components/Axios/API";
 
 class EditItem extends React.Component {
   constructor(props) {
@@ -31,8 +31,8 @@ class EditItem extends React.Component {
   }
 
   getItem() {
-    axios
-      .get("https://localhost:44326/api/Item/" + this.state.id)
+    API
+      .get("item/" + this.state.id)
       .then(res => {
         this.setState({
           name: res.data.name,
@@ -48,8 +48,8 @@ class EditItem extends React.Component {
   }
 
   getTypes() {
-    axios
-      .get("https://localhost:44326/api/item/types")
+    API
+      .get("item/types")
       .then(res => {
         this.setState({
           types: res.data
@@ -62,8 +62,8 @@ class EditItem extends React.Component {
   }
 
   getCategories() {
-    axios
-      .get("https://localhost:44326/api/item/categories")
+    API
+      .get("item/categories")
       .then(res => {
         this.setState({
           categoryes: res.data
@@ -109,8 +109,8 @@ class EditItem extends React.Component {
       typeName: this.state.typeName,
       cost: this.state.cost
     };
-    axios
-      .post("https://localhost:44326/api/Item/edit", newItemData, {
+    API
+      .post("item/edit", newItemData, {
         headers: { Authorization: "Bearer " + localStorage.getItem("token") }
       })
       .then(res => {

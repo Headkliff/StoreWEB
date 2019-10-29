@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
 import { connect } from "react-redux";
-import axios from "axios";
+
 import "./login.css";
 import { errorToast } from "../../Components/Toasts/Toast";
 import {
@@ -11,6 +11,7 @@ import {
 } from "react-toasts";
 import { login } from "../../Actions/userActionCreaters";
 import { compose } from "redux";
+import API from "../../Components/Axios/API";
 
 class SignInForm extends Component {
   state = {
@@ -53,8 +54,8 @@ class SignInForm extends Component {
       password: this.state.password
     };
     if (this.state.passwordCorrect && this.state.nicknameCorrect) {
-      axios
-        .post("https://localhost:44326/api/Login/login", user)
+      API
+        .post("/Login/login", user)
         .then(res => {
           localStorage.setItem("token", res.data.token);
           localStorage.setItem("nickname", res.data.user.nickname);

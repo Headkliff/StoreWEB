@@ -1,6 +1,5 @@
 import React from "react";
-import { Container, Row, Col } from "react-bootstrap";
-import axios from "axios";
+import { Container, Row, Col, Button } from "react-bootstrap";
 import {
   ToastsContainer,
   ToastsStore,
@@ -8,15 +7,16 @@ import {
 } from "react-toasts";
 import { errorToast } from "../../Components/Toasts/Toast";
 import "./Home.css";
+import API from "../../Components/Axios/API";
 
 class Home extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      items: [],
-      page: 0
+      page: 0,
+      items:[],
     };
-    this.getItems();
+    this.getItems()
   }
 
   getItems = () => {
@@ -25,44 +25,23 @@ class Home extends React.Component {
       selectedSort: "DateDesc",
       pageNumber: this.state.page
     };
-    axios
-      .post("https://localhost:44326/api/item/items", query)
+    API
+      .post("/item/items", query)
       .then(res => {
-        this.setState({
-          items: res.data,
-        });
+        const { items } = this.state;
+        items.push(...res.data);
+        this.setState({ items });
       })
       .catch(error => {
         errorToast("Something went wrong");
       });
   };
 
-  PageCount = i => {
-    return (
-      <li className="page-item">
-        <h2 className="btn btn-link page-link">{this.state.page+1}</h2>
-      </li>
-    );
-  };
-
-  Previous = () => {
-    if (this.state.page>0 ) {
-      this.setState ( {
-        page: this.state.page --
-      });
-    }
-    this.getItems();
-  };
-
-  Next = () => {
-    if (this.state.items.length<9) {
-      this.setState ({
-        page: (this.state.page ++)
-      });
-    }
-    console.log(this.state.page)
-    this.getItems();
-  };
+  seeMore() {
+    this.setState({
+      page: this.state.page+1
+    }, ()=>this.getItems())
+  }
 
   showMore(id) {
     this.props.history.push("/item/" + id);
@@ -83,6 +62,7 @@ class Home extends React.Component {
               <button
                 className="btn btn-primary"
                 onClick={() => this.showMore(id)}
+                aria-disabled={this.state.end}
               >
                 Show More
               </button>
@@ -107,30 +87,11 @@ class Home extends React.Component {
                 <Row>{this.renderItems()}</Row>
               </Col>
             </Row>
-            <nav aria-label="Page navigation example">
-              <ul class="pagination">
-                <li class="page-item">
-                  <button
-                    type="button"
-                    className="btn btn-link page-link"
-                    aria-label="Previous"
-                    onClick={() => this.Previous()}
-                  >
-                    <span aria-hidden="true">&laquo;</span>
-                  </button>
-                </li>
-                {this.PageCount()}
-                <li className="page-item">
-                  <button
-                    className="btn btn-link page-link"
-                    aria-label="Next"
-                    onClick={() => this.Next()}
-                  >
-                    <span aria-hidden="true">&raquo;</span>
-                  </button>
-                </li>
-              </ul>
-            </nav>
+            <Row>
+              <Col sm align='center'>
+                <Button type ='button' variant="primary" onClick={()=>this.seeMore()}>See More</Button>
+              </Col>
+            </Row>
           </Container>
         </div>
       </>
