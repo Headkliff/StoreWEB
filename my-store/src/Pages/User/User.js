@@ -4,7 +4,6 @@ import { connect } from "react-redux";
 import { compose } from "redux";
 import UnAuthorize from "../../Components/UnAuthorize/UnAuthorize";
 import { errorToast } from "../../Components/Toasts/Toast";
-import Sidebar from "../../Components/Sidebar/Sidebar";
 import API from "../../Components/Axios/API";
 
 class User extends React.Component {
@@ -21,8 +20,7 @@ class User extends React.Component {
   }
 
   getUserInfo() {
-    API
-      .get("/user")
+    API.get("/user")
       .then(res => {
         this.setState({
           nickname: res.data.nickname,
@@ -33,8 +31,10 @@ class User extends React.Component {
         });
       })
       .catch(error => {
-        errorToast("Somethin went wrong");
-        this.setState({ loading: false });
+        this.setState(
+          { loading: false },
+          errorToast("Error: " + error.response.data.message)
+        );
       });
   }
 
@@ -98,7 +98,6 @@ class User extends React.Component {
     if (this.props.isAuthorized) {
       return (
         <>
-          <Sidebar />
           <div className="center">
             <div className="container">{this.userInfo()}</div>
           </div>

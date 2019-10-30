@@ -14,23 +14,30 @@ class Home extends React.Component {
     super(props);
     this.state = {
       page: 0,
-      items:[],
+      total: 0,
+      isLoaded: false,
+      items: []
     };
-    this.getItems()
+    this.getItems();
   }
 
   getItems = () => {
     const query = {
       name: "",
       selectedSort: "DateDesc",
-      pageNumber: this.state.page
+      pageNumber: this.state.page,
+      category: "",
+      type: ""
     };
-    API
-      .post("/item/items", query)
+    API.post("/item/items", query)
       .then(res => {
         const { items } = this.state;
-        items.push(...res.data);
-        this.setState({ items });
+        items.push(...res.data.items);
+
+
+        this.setState({ items, total: res.data.count, isLoaded: items.length === res.data.count });
+        
+        console.log(this.state);
       })
       .catch(error => {
         errorToast("Something went wrong");
@@ -38,9 +45,12 @@ class Home extends React.Component {
   };
 
   seeMore() {
-    this.setState({
-      page: this.state.page+1
-    }, ()=>this.getItems())
+    this.setState(
+      {
+        page: this.state.page + 1
+      },
+      () => this.getItems()
+    );
   }
 
   showMore(id) {
@@ -62,7 +72,6 @@ class Home extends React.Component {
               <button
                 className="btn btn-primary"
                 onClick={() => this.showMore(id)}
-                aria-disabled={this.state.end}
               >
                 Show More
               </button>
@@ -88,8 +97,15 @@ class Home extends React.Component {
               </Col>
             </Row>
             <Row>
-              <Col sm align='center'>
-                <Button type ='button' variant="primary" onClick={()=>this.seeMore()}>See More</Button>
+              <Col sm align="center">
+                <Button
+                  type="button"
+                  variant="primary"
+                  onClick={() => this.seeMore()}
+                  disabled={this.state.isLoaded}
+                >
+                  See More
+                </Button>
               </Col>
             </Row>
           </Container>

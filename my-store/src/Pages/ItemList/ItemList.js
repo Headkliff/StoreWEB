@@ -1,43 +1,39 @@
 import React from "react";
 import { Redirect } from "react-router";
 import {
-  Button,
-  Col,
-  Row,
-  InputGroup,
-  FormControl,
-  Dropdown,
-  Form
-} from "react-bootstrap";
-import {
   ToastsContainer,
   ToastsStore,
   ToastsContainerPosition
 } from "react-toasts";
 import { connect } from "react-redux";
 import UnAuthorize from "../../Components/UnAuthorize/UnAuthorize";
-import Sidebar from "../../Components/Sidebar/Sidebar";
 import EditButton from "./EditButton";
 import DeleteButton from "./DeleteButton";
 import API from "../../Components/Axios/API";
 import "./ItemList.css";
+import { errorToast } from "../../Components/Toasts/Toast";
+import { Grid, GridColumn as Column } from "@progress/kendo-react-grid";
+import { orderBy } from "@progress/kendo-data-query";
+import '@progress/kendo-theme-default/dist/all.css';
 
 class ItemList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       name: "",
-      categoty: "",
+      category: "",
+      type: "",
       sortType: "",
       loading: true,
-      isNameAsc: true,
       page: 0,
+      total:0,
       items: [],
-      categories: [],
-      types:[]
+      sort: [{ field: "Name", dir: "asc" }],
+      filter: undefined
     };
     this.getMoreItem();
     this.getCategories();
+    this.getTypes();
   }
 
   showMore() {
@@ -49,44 +45,24 @@ class ItemList extends React.Component {
     );
   }
 
-  NameSort = () => {
-    if (!this.state.isNameAsc) {
-      this.setState(
-        {
-          sortType: "NameAsc",
-          page: 0,
-          isNameAsc: !this.state.isNameAsc
-        },
-        () => this.sortItems()
-      );
-    } else {
-      this.setState(
-        {
-          sortType: "NameDesc",
-          page: 0,
-          isNameAsc: !this.state.isNameAsc
-        },
-        () => this.sortItems()
-      );
-    }
-  };
-
-  categorySort = (name) => {
-    this.setState({
-      category: name
-    }, this.sortItems())
-  };
-
   sortItems = () => {
+    const sort = this.state.sort[0]
+    let select = ""
+    if (sort!== undefined){
+      select = sort.field+sort.dir
+    }else{select = ''}
+    console.log(select)
     API.post("/item/items", {
       name: this.state.name,
-      selectedSort: this.state.sortType,
+      selectedSort: select,
       pageNumber: this.state.page,
-      category:this.state.categoty
+      category: this.state.category,
+      type: this.state.type
     })
       .then(res => {
         this.setState({
-          items: res.data
+          items: res.data.items,
+          total: res.data.count
         });
       })
       .catch(error => {
@@ -99,14 +75,16 @@ class ItemList extends React.Component {
       name: this.state.name,
       selectedSort: this.state.sortType,
       pageNumber: this.state.page,
-      category:this.state.categoty
+      category: this.state.category,
+      type: this.state.type
     })
       .then(res => {
         const { items } = this.state;
-        items.push(...res.data);
-        this.setState({ items });
+        items.push(...res.data.items);
+        this.setState({ items, rowData: this.state.items });
       })
       .catch(error => {
+        errorToast(error.data);
         this.setState({ loading: false });
       });
   };
@@ -123,48 +101,17 @@ class ItemList extends React.Component {
       });
   };
 
-  handleChange = e => {
-    e.preventDefault();
-    const target = e.target;
-    const value = target.type === "checkbox" ? target.checked : target.value;
-    const name = target.name;
-
-    this.setState({
-      [name]: value
-    });
+  getTypes = () => {
+    API.get("/item/types")
+      .then(res => {
+        this.setState({
+          types: res.data
+        });
+      })
+      .catch(error => {
+        this.setState({ loading: false });
+      });
   };
-
-  handleSubmit = e => {
-    e.preventDefault();
-    this.sortItems();
-  };
-
-  renderCategory = () => {
-    return this.state.categories.map(category => {
-      const { id, name } = category;
-      return <Dropdown.Item key={id}><Button variant="text" onClick={()=>this.categorySort(name)}>{name}</Button></Dropdown.Item>;
-    });
-  };
-
-  renderTableData() {
-    return this.state.items.map(item => {
-      const { id, name, categoryName, typeName, cost } = item;
-      return (
-        <tr key={id}>
-          <td>{name}</td>
-          <td>{categoryName}</td>
-          <td>{typeName}</td>
-          <td>{cost}</td>
-          <td>
-            <EditButton id={id} />
-          </td>
-          <td>
-            <DeleteButton id={id} />
-          </td>
-        </tr>
-      );
-    });
-  }
 
   pageRender() {
     if (this.props.isAuthorized) {
@@ -173,75 +120,41 @@ class ItemList extends React.Component {
           <h1 id="title" align="center">
             All Store Items
           </h1>
-          <table id="users" className="table table-hover table-dark">
-            <thead>
-              <tr>
-                <th scope="col">
-                  <Row>
-                    <Col>
-                      <Form onSubmit={this.handleSubmit}>
-                        <InputGroup size="sm" className="mb-1">
-                          <InputGroup.Prepend></InputGroup.Prepend>
-                          <FormControl
-                            placeholder="Name Search"
-                            aria-label="Small"
-                            name="name"
-                            id="name"
-                            aria-describedby="inputGroup-sizing-sm"
-                            value={this.state.name}
-                            onChange={this.handleChange}
-                          />
-                        </InputGroup>
-                      </Form>
-                    </Col>
-                    <Col>
-                      <Button
-                        type="button"
-                        variant="secondary"
-                        onClick={() => this.NameSort()}
-                        disabled={this.state.isNameAsc}
-                      >
-                        <img src="\Media\up-arrow.png" alt="..." />
-                      </Button>
+          <Grid
+            style={{ height: "450px" }}
+            data={orderBy(this.state.items, this.state.sort)}
+            sortable
+            sort={this.state.sort}
+            filterable={true}
+            filter={this.state.filter}
+            pageable={true}
+            onSortChange={e => {
+              this.setState(
+                {
+                  sort: e.sort
+                },
+                () => this.sortItems()
+              );
+              onFilterChange={()=>this.filterChange}
+            }}
+          >
+            <Column field="id" />
+            <Column field="name" />
 
-                      <Button
-                        type="button"
-                        variant="secondary"
-                        onClick={() => this.NameSort()}
-                        disabled={!this.state.isNameAsc}
-                      >
-                        <img src="\Media\down-arrow.png" alt="..." />
-                      </Button>
-                    </Col>
-                  </Row>
-                </th>
-                <th scope="col">
-                  <Dropdown>
-                    <Dropdown.Toggle
-                      split
-                      variant="secondary"
-                      id="dropdown-basic"
-                    >
-                      Category
-                    </Dropdown.Toggle>
-                    <Dropdown.Menu>{this.renderCategory()}</Dropdown.Menu>
-                  </Dropdown>
-                </th>
-                <th scope="col">Type</th>
-                <th scope="col">Cost</th>
-                <th scope="col">Edit</th>
-                <th scope="col">Delete</th>
-              </tr>
-            </thead>
-            <tbody>{this.renderTableData()}</tbody>
-          </table>
-          <Row>
+            <Column field="categoryName" title="Category" />
+
+            <Column field="typeName" title="Type" />
+
+            <Column field="cost" />
+          </Grid>
+
+          {/* <Row>
             <Col sm align="center">
               <Button variant="secondary" onClick={() => this.showMore()}>
                 Show More
               </Button>
             </Col>
-          </Row>
+          </Row> */}
         </>
       );
     } else {
@@ -256,7 +169,6 @@ class ItemList extends React.Component {
           store={ToastsStore}
           position={ToastsContainerPosition.TOP_LEFT}
         />
-        <Sidebar />
 
         <div className="jumbotron jumbotron">
           <div className="container">{this.pageRender()}</div>

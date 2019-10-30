@@ -12,11 +12,15 @@ import Item from "../Components/Item/Item";
 import EditItem from "../Pages/EditItem/EditItem";
 import ItemList from "../Pages/ItemList/ItemList";
 import ItemCreate from "../Pages/CreateItem/ItemCreate";
+import Sidebar from "../Components/Sidebar/Sidebar"
 
 const Routes = () => {
   return (
     <Router>
+      <div>
       <Navibar />
+      <Sidebar/>
+      </div>
       <Switch>
         <Route exact path="/" component={Home} />
         <Route path="/login" component={SignInForm} />

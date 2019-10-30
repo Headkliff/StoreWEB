@@ -98,7 +98,6 @@ class AddItem extends React.Component {
           store={ToastsStore}
           position={ToastsContainerPosition.TOP_LEFT}
         />
-        <Sidebar />
         <Jumbotron>
           <Container>
             <form

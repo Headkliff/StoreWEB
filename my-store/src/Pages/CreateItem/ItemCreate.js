@@ -8,7 +8,6 @@ import {
 import { errorToast, successToast } from "../../Components/Toasts/Toast";
 import { Jumbotron, Container, Form } from "react-bootstrap";
 import { connect } from "react-redux";
-import Sidebar from "../../Components/Sidebar/Sidebar";
 import API from "../../Components/Axios/API";
 
 class ItemCreate extends React.Component {
@@ -107,7 +106,6 @@ class ItemCreate extends React.Component {
           store={ToastsStore}
           position={ToastsContainerPosition.TOP_LEFT}
         />
-        <Sidebar />
         <Jumbotron>
           <Container>
             <form

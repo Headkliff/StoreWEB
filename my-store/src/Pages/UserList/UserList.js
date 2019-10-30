@@ -1,5 +1,5 @@
 import React from "react";
-
+import {Form, FormControl, InputGroup,Row, Col, Button} from 'react-bootstrap'
 import { Redirect } from "react-router";
 import {
   ToastsContainer,
@@ -10,7 +10,6 @@ import { errorToast, successToast } from "../../Components/Toasts/Toast";
 import { connect } from "react-redux";
 import { compose } from "redux";
 import UnAuthorize from "../../Components/UnAuthorize/UnAuthorize";
-import Sidebar from "../../Components/Sidebar/Sidebar";
 import API from "../../Components/Axios/API";
 
 class UserList extends React.Component {
@@ -18,20 +17,33 @@ class UserList extends React.Component {
     super(props);
     this.state = {
       loading: true,
-      users: []
+      nickname: "",
+      email:'',
+      page:0,
+      users: [],
+      end: false
     };
-    this.getUsers();
+    this.getMoreUsers();
   }
-  getUsers = () => {
-    API.get("/user/userList")
+
+  showMore=()=>{
+    this.setState(
+      {
+        page: this.state.page + 1
+      },
+      () => this.getMoreUsers()
+    );
+  }
+  getMoreUsers = () => {
+    API.post("/user/userList", { nickname: this.state.nickname, email: this.state.email, pageNumber: this.state.page, })
       .then(res => {
-        this.setState({
-          users: res.data,
-          loading: false
-        });
+        const { users } = this.state;
+        users.push(...res.data);
+        this.setState({ users });
       })
       .catch(error => {
         this.setState({ loading: false });
+        errorToast(error.response.data.message)
       });
   };
 
@@ -39,7 +51,7 @@ class UserList extends React.Component {
     API.delete("/User/delete", user)
       .then(res => {
         successToast("User delete!");
-        this.getUsers();
+        this.getMoreUsers();
       })
       .catch(error => {
         errorToast(error.response.data.message);
@@ -50,7 +62,7 @@ class UserList extends React.Component {
     API.delete("/User/softDelete", user)
       .then(res => {
         successToast("User sucssesfuly blocked!");
-        this.getUsers();
+        this.getMoreUsers();
       })
       .catch(error => {
         errorToast(error.response.data.message);
@@ -60,14 +72,14 @@ class UserList extends React.Component {
     API.delete("/User/unlock", user)
       .then(res => {
         successToast("User sucssesfuly unlocked!");
-        this.getUsers();
+        this.getMoreUsers();
       })
       .catch(error => {
         errorToast(error.response.data.message);
       });
   };
 
-  blockButton(user) {
+  blockButton=(user)=> {
     if (user.isDeleted) {
       return (
         <button
@@ -89,7 +101,34 @@ class UserList extends React.Component {
       </button>
     );
   }
-  
+
+  handleChange=e=>{
+    e.preventDefault()
+    const target = e.target;
+    const value = target.type === "checkbox" ? target.checked : target.value;
+    const name = target.name;
+
+    this.setState(
+      {
+        [name]: value
+      },
+      () => this.sortUsers()
+    );
+  }
+
+  sortUsers =() => {
+    API.post("/user/userList", { nickname: this.state.nickname, email: this.state.email, pageNumber:0 })
+      .then(res => {
+        this.setState({
+          users: res.data,
+          loading: false
+        });
+      })
+      .catch(error => {
+        this.setState({ loading: false });
+      });
+  };
+
   renderTableData() {
     return this.state.users.map(user => {
       const { id, nickname, email, firstName, secondName, isDeleted } = user;
@@ -114,6 +153,7 @@ class UserList extends React.Component {
       );
     });
   }
+
   pageRender() {
     if (this.props.isAuthorized) {
       return (
@@ -124,8 +164,36 @@ class UserList extends React.Component {
           <table id="users" className="table table-hover table-dark">
             <thead>
               <tr>
-                <th scope="col">Nickname</th>
-                <th scope="col">Email</th>
+                <th scope="col">
+                  <Form>
+                    <InputGroup size="sm" className="mb-1">
+                      <InputGroup.Prepend></InputGroup.Prepend>
+                      <FormControl
+                        placeholder="Nickname Search"
+                        aria-label="Small"
+                        name="nickname"
+                        id="nickname"
+                        aria-describedby="inputGroup-sizing-sm"
+                        value={this.state.nickname}
+                        onChange={this.handleChange}
+                      />
+                    </InputGroup>
+                  </Form>
+                </th>
+                <th scope="col"><Form>
+                    <InputGroup size="sm" className="mb-1">
+                      <InputGroup.Prepend></InputGroup.Prepend>
+                      <FormControl
+                        placeholder="Email Search"
+                        aria-label="Small"
+                        name="email"
+                        id="email"
+                        aria-describedby="inputGroup-sizing-sm"
+                        value={this.state.email}
+                        onChange={this.handleChange}
+                      />
+                    </InputGroup>
+                  </Form></th>
                 <th scope="col">First Name</th>
                 <th scope="col">Last Name</th>
                 <th scope="col">Block</th>
@@ -135,6 +203,13 @@ class UserList extends React.Component {
             </thead>
             <tbody>{this.renderTableData()}</tbody>
           </table>
+          <Row>
+            <Col sm align="center">
+              <Button variant="secondary" onClick={() => this.showMore()}>
+                Show More
+              </Button>
+            </Col>
+          </Row>
         </>
       );
     } else {
@@ -148,7 +223,6 @@ class UserList extends React.Component {
           store={ToastsStore}
           position={ToastsContainerPosition.TOP_LEFT}
         />
-        <Sidebar />
         <div className="jumbotron jumbotron">
           <div className="container">{this.pageRender()}</div>
         </div>
