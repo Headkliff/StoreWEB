@@ -26,8 +26,10 @@ class ItemList extends React.Component {
       sortType: "",
       loading: true,
       page: 0,
-      total:0,
+      total: 0,
       items: [],
+      caegories: [],
+      types: [],
       sort: [{ field: "Name", dir: "asc" }],
       filter: undefined
     };
@@ -48,9 +50,9 @@ class ItemList extends React.Component {
   sortItems = () => {
     const sort = this.state.sort[0]
     let select = ""
-    if (sort!== undefined){
-      select = sort.field+sort.dir
-    }else{select = ''}
+    if (sort !== undefined) {
+      select = sort.field + sort.dir
+    } else { select = '' }
     console.log(select)
     API.post("/item/items", {
       name: this.state.name,
@@ -90,27 +92,11 @@ class ItemList extends React.Component {
   };
 
   getCategories = () => {
-    API.get("/item/categories")
-      .then(res => {
-        this.setState({
-          categories: res.data
-        });
-      })
-      .catch(error => {
-        this.setState({ loading: false });
-      });
+    this.setState({ caegories: this.state.items.category })
   };
 
   getTypes = () => {
-    API.get("/item/types")
-      .then(res => {
-        this.setState({
-          types: res.data
-        });
-      })
-      .catch(error => {
-        this.setState({ loading: false });
-      });
+    this.setState({ types: this.state.items.type })
   };
 
   pageRender() {
@@ -135,8 +121,8 @@ class ItemList extends React.Component {
                 },
                 () => this.sortItems()
               );
-              onFilterChange={()=>this.filterChange}
             }}
+            onFilterChange={() => this.filterChange}
           >
             <Column field="id" />
             <Column field="name" />
@@ -147,14 +133,6 @@ class ItemList extends React.Component {
 
             <Column field="cost" />
           </Grid>
-
-          {/* <Row>
-            <Col sm align="center">
-              <Button variant="secondary" onClick={() => this.showMore()}>
-                Show More
-              </Button>
-            </Col>
-          </Row> */}
         </>
       );
     } else {
@@ -175,8 +153,8 @@ class ItemList extends React.Component {
         </div>
       </>
     ) : (
-      <Redirect to="/" />
-    );
+        <Redirect to="/" />
+      );
   }
 }
 
