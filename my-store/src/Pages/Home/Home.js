@@ -13,7 +13,8 @@ class Home extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      page: 0,
+      skip:0,
+      take:9,
       total: 0,
       isLoaded: false,
       items: []
@@ -25,19 +26,18 @@ class Home extends React.Component {
     const query = {
       name: "",
       selectedSort: "DateDesc",
-      pageNumber: this.state.page,
+      skip: this.state.skip,
+      take: this.state.take,
       category: "",
-      type: ""
+      type: "",
+      cost: 0
     };
+    console.log(query)
     API.post("/item/items", query)
       .then(res => {
         const { items } = this.state;
         items.push(...res.data.items);
-
-
         this.setState({ items, total: res.data.count, isLoaded: items.length === res.data.count });
-        
-        console.log(this.state);
       })
       .catch(error => {
         errorToast("Something went wrong");
@@ -47,7 +47,7 @@ class Home extends React.Component {
   seeMore() {
     this.setState(
       {
-        page: this.state.page + 1
+        skip: this.state.skip+this.state.take
       },
       () => this.getItems()
     );
