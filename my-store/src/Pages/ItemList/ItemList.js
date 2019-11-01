@@ -58,7 +58,7 @@ class ItemList extends React.Component {
       select = "";
     }
     console.log(select);
-    API.post("/item/items", {
+    API.post("/item/sort", {
       name: this.state.name,
       selectedSort: select,
       pageNumber: this.state.page,
@@ -81,7 +81,7 @@ class ItemList extends React.Component {
   };
 
   getMoreItem = () => {
-    API.post("/item/items", {
+    API.post("/item/sort", {
       name: this.state.name,
       selectedSort: this.state.sortType,
       pageNumber: this.state.page,
@@ -145,6 +145,7 @@ class ItemList extends React.Component {
       {
         filter: event.filter,
         name: name,
+        skip:0,
         cost: cost,
         category: categoryfilter,
         type: typeFilter
@@ -192,13 +193,8 @@ class ItemList extends React.Component {
             }}
             onFilterChange={this.filterChange}
             onPageChange={this.pageChange}
+            
           >
-            <Column
-              field="id"
-              filterable={false}
-              sortable={false}
-              width="80px"
-            />
             <Column field="name" title="Name" />
 
             <Column
@@ -209,7 +205,7 @@ class ItemList extends React.Component {
 
             <Column field="typeName" title="Type" filterCell={TypeFilter} />
 
-            <Column field="cost" title="Cost" />
+            <Column field="cost" title="Cost" editor="numeric"/>
           </Grid>
         </>
       );
